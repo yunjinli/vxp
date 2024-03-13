@@ -90,3 +90,5 @@ class RandomRigidBodyTransformation(object):
             print(f"Translation (x, y, z): ({trans_x}, {trans_y}, {trans_z})")
             
         return output
+    def __repr__(self):
+        return self.__class__.__name__ + '(x_limit={0}, y_limit={1}, z_limit={2}, pitch_limit={3}, yaw_limit={4}, roll_limit={5})'.format(self.x_limit, self.y_limit, self.z_limit, self.pitch_limit, self.yaw_limit, self.roll_limit)

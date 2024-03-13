@@ -56,3 +56,5 @@ class OnlinePointAffineTransformation(object):
         x = torch.flip(x, dims=[1])
 
         return x
+    def __repr__(self):
+        return self.__class__.__name__ + '(R={0}, t={1})'.format(self.rot, self.trans)

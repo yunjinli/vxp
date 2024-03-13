@@ -53,6 +53,8 @@ class OnlineRotX(object):
         x = torch.transpose(torch.matmul(
             self.rx, torch.transpose(x.type(torch.float64), 0, 1)), 0, 1)
         return x
+    def __repr__(self):
+        return self.__class__.__name__ + '(R={0})'.format(self.rx)
 
 
 class OnlineRotY(object):
@@ -87,6 +89,8 @@ class OnlineRotY(object):
         x = torch.transpose(torch.matmul(
             self.ry, torch.transpose(x, 0, 1)), 0, 1)
         return x
+    def __repr__(self):
+        return self.__class__.__name__ + '(R={0})'.format(self.ry)
 
 
 class OnlineRotZ(object):
@@ -121,3 +125,5 @@ class OnlineRotZ(object):
         x = torch.transpose(torch.matmul(
             self.rz, torch.transpose(x, 0, 1)), 0, 1)
         return x
+    def __repr__(self):
+        return self.__class__.__name__ + '(R={0})'.format(self.rz)

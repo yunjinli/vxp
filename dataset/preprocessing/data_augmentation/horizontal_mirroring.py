@@ -36,3 +36,5 @@ class HorizontalMirroring(object):
         output = torch.clone(x)
         output[:, 1] *= -1
         return output
+    def __repr__(self):
+        return self.__class__.__name__

@@ -1,7 +1,6 @@
 from .pointcloud.online_rotation import OnlineRotX, OnlineRotY, OnlineRotZ
 from .pointcloud.online_voxelization import OnlineVoxelization
 from .pointcloud.online_lidar_range_image import OnlineLidarRangeImage, OnlineLidarRangeDenseMap
-from .voxel.online_affine_transformation import OnlineAffineTransformation
 from .data_augmentation.horizontal_mirroring import HorizontalMirroring as DataAugmentationHorizontalMirroring
 from .data_augmentation.random_rigid_body_transformation import RandomRigidBodyTransformation as DataAugmentationRandomRigidBodyTransformation
 from .data_augmentation.random_scaling import RandomScaling

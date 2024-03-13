@@ -54,4 +54,5 @@ class OnlineVoxelization(object):
         voxels_out, coors_out, num_points_per_voxel_out = self.vox(pcd)
         voxels_out = voxels_out.to(torch.float32)
         return voxels_out, coors_out, num_points_per_voxel_out
-
+    def __repr__(self):
+        return self.__class__.__name__ + '(vox={0})'.format(self.vox)

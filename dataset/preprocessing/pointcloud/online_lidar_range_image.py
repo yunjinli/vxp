@@ -109,7 +109,9 @@ class OnlineLidarRangeImage(object):
         elif self.mode == 'points':
             return x
 
-
+    def __repr__(self):
+        return self.__class__.__name__ + '(K={0}, h={1}, w={2}, mode={3}, remove_far={4})'.format(self.K, self.h, self.w, self.mode, self.remove_far)
+    
 class OnlineLidarRangeDenseMap(object):
     """Generate dense depth map
     """
@@ -183,3 +185,5 @@ class OnlineLidarRangeDenseMap(object):
             np.ndarray: Output dense depth map
         """
         return self.__dense_map(x.T, self.w, self.h, self.grid_size)
+    def __repr__(self):
+        return self.__class__.__name__ + '(grid_size={0}, h={1}, w={2})'.format(self.grid_size, self.h, self.w)
