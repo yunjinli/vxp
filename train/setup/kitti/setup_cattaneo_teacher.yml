@@ -1,0 +1,88 @@
+general:
+  train_pickle_dir: /storage/user/lyun/kitti/vxp_kitti_newval_training_queries_baseline_p10_n25_yaw.pickle
+  val_pickle_dir: /storage/user/lyun/kitti/vxp_kitti_newval_test_queries_baseline_p10_n25_yaw.pickle
+  save_dir: /storage/user/lyun/kitti
+  name: cattaneo_teacher_kitti
+model:
+  pretrained: null
+  backbone:
+    arch: vgg16
+  # pooling:
+  #   arch: GeM
+  #   parameters:
+  #     p: 3
+  #     eps: 1.0e-06
+  #     normalize: false
+  #     dense_output_dim: !!python/tuple
+  #       - 512
+  #       - 256
+  pooling:
+    arch: NetVLAD
+    parameters:
+      num_clusters: 64
+      dim: 512
+      normalize_input: true
+      vladv2: true
+      output_dim: 256
+      gating: true
+  input_size: [1, 3, 240, 720]
+# model:
+#   pretrained: null
+#   backbone:
+#     arch: DinoViTWrapper
+#     parameters:
+#       dino: dino_vits8
+#   pooling:
+#     arch: GeM
+#     parameters:
+#       p: 3
+#       eps: 1.0e-06
+#       normalize: false
+#       dense_output_dim: !!python/tuple
+#         - 384
+#         - 256
+#   input_size:
+#     - 1
+#     - 3
+#     - 224
+#     - 224
+
+dataset:
+  use_undistorted: True
+  ram_limit: 180
+  batch_size: 16
+  batch_size_limit: 128
+  # batch_size_limit: 80
+  batch_expansion_rate: 1.2
+  batch_expansion_th: 0.8
+  num_workers: 8
+  preprocessing:
+    ToTensor:
+      parameters: {}
+    Resize:
+      parameters: { size: [240, 720] }
+      # parameters: { size: [224, 224] }
+    Normalize:
+      parameters: { mean: [0.485, 0.456, 0.406], std: [0.229, 0.224, 0.225] }
+  data_augmentation:
+    ColorJitter:
+      parameters: { brightness: 0.1, contrast: 0.1, saturation: 0.1, hue: 0.1 }
+    RandomAffine:
+      parameters: { degrees: [-5, 5], translate: [0.1, 0.1] }
+
+loss:
+  loss_fn: BatchHardTripletMarginLoss
+  parameters:
+    margin: 0.3
+    normalize_embeddings: False
+
+optimizer:
+  fn: Adam
+  parameters: { lr: 0.00001, weight_decay: 0.000001 }
+  epochs: 100
+  recall_interval: 10
+  min_lr: 0.000001
+
+scheduler:
+  fn: LambdaLR
+  parameters: { step_size: 2, gamma: 0.95 }

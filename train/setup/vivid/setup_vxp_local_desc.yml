@@ -1,0 +1,127 @@
+general:
+  train_pickle_dir: /storage/user/lyun/vivid/vxp_vivid_training_pair_3d_student_p10_n25.pickle ## Training row ID in annotation.csv, note that this is not the picke you train the teacher network
+  val_pickle_dir: /storage/user/lyun/vivid/vxp_vivid_testing_pair_3d_student_p10_n25.pickle ## Testing row ID in annotation.csv, note that this is not the picke you train the teacher network
+  annotation_dir: /storage/group/dataset_mirrors/01_incoming/vividpp/driving_full/annotations_all.csv ## Location of the annotation.csv
+  save_dir: /storage/user/lyun/vivid/ ## Location to save the model and log
+  name: vxpext_vivid ## name of the model
+
+model:
+  teacher_setup: /storage/user/lyun/vivid/models/setup_teacher_vivid_2023_11_20_21_35_31.yml
+  teacher_model: /storage/user/lyun/vivid/models/teacher_vivid_2023_11_20_21_35_31_v.pth
+  teacher_desc_type: output
+  arch: VoxelLocalFeatureExtractor
+  ## The below parameters shouldn't be changed
+  parameters:
+    grid_zyx: null
+    voxel_size: null
+    pcd_range: null
+    vfe_feat_channels: [16, 64, 128]
+    middle_spconv_in_channels: 128
+    middle_spconv_out_channels: 384
+    middle_base_channels: 16
+    middle_encoder_channels: !!python/tuple
+      - !!python/tuple [16]
+      - !!python/tuple [32, 64, 64]
+      - !!python/tuple [128, 256, 256]
+    middle_encoder_paddings: !!python/tuple
+      - !!python/tuple
+        - !!python/tuple [1, 1, 1] ## First stage first layer would be submanifold convolution
+      - !!python/tuple
+        - !!python/tuple [1, 1, 1] ## First layer would be spconv
+        - !!python/tuple [1, 1, 1] ## Submanifold convolution
+        - !!python/tuple [1, 1, 1] ## Submanifold convolution
+      - !!python/tuple
+        - !!python/tuple [1, 1, 1] ## First layer would be spconv
+        - !!python/tuple [1, 1, 1] ## Submanifold convolution
+        - !!python/tuple [1, 1, 1] ## Submanifold convolution
+    middle_encoder_downsampling_other_dim: [False, True, False]
+  ## please give the normalized intrisics and possible axes alignment
+  proj_params:
+    fx: 0.5489086326472639
+    fy: 0.6869669655135274
+    cx: 0.5038512880742119
+    cy: 0.5141183998696747
+    R: [[0, -1, 0], [0, 0, -1], [1, 0, 0]]
+    w: 28
+    h: 28
+dataset:
+  rebase_dir: null
+  batch_size: 8
+  num_workers: 8
+  voxelization: True
+  random_horizontal_mirroring_p: 0.5
+  ## This has to be modify to make sure that the input point cloud map is described in the camera cooraindate frame
+  ## and the z-axis upward, x-axis forward
+  pcd_coordinate_transformation:
+    OnlinePointAffineTransformation:
+      parameters:
+        x_axis:
+          - -0.02706162
+          - 0.01903198
+          - -0.99945258
+        y_axis:
+          - 0.99963206
+          - -0.00133414
+          - -0.02709189
+        z_axis:
+          - -0.00184903
+          - -0.99981799
+          - -0.01898888
+        trans:
+          - -0.38352616
+          - -0.38655251
+          - -0.03873405
+    OnlineRotZ:
+      parameters:
+        angle: -90
+        use_degree: true
+    OnlineRotX:
+      parameters:
+        angle: 90
+        use_degree: true
+  pcd_preprocessing:
+    OnlineVoxelization:
+      ## The parameter for voxeliation are not expected to be changed, if changes are needed, make sure that the output grid size is 110 x 110 x 110
+      parameters:
+        {
+          point_cloud_range: [0, -22, -4, 44, 22, 18],
+          max_num_points: 35,
+          voxel_size: [0.4, 0.4, 0.2],
+          max_voxels: 10000,
+        }
+      # parameters: {point_cloud_range: [0, -20, -2.5, 50, 20, 15], max_num_points: 35, voxel_size: [0.75, 0.2, 0.0875], max_voxels: 10000} ## grid size 67 x 200 x 200
+  pcd_data_augmentation:
+    {}
+    # DataAugmentationRandomRigidBodyTransformation:
+    #   parameters:
+    #     {
+    #       x_limit: 1.5,
+    #       y_limit: 1.5,
+    #       z_limit: 1.5,
+    #       pitch_limit: 2,
+    #       yaw_limit: 10,
+    #       roll_limit: 2,
+    #     }
+  img_data_augmentation:
+    ColorJitter:
+      parameters: { brightness: 0.1, contrast: 0.1, saturation: 0.1, hue: 0.1 }
+    # RandomAffine:
+    #   parameters: { degrees: [-5, 5], translate: [0.1, 0.1] }
+loss:
+  fn: SmoothL1Loss ## MSELoss
+  # parameters: { reduction: "none" }
+  # inv_depth_weighted_loss: True
+  parameters: { reduction: "mean" }
+  inv_depth_weighted_loss: False
+
+optimizer:
+  fn: Adam
+  parameters:
+    lr: 1.0e-04
+    weight_decay: 1.0e-06
+  epochs: 30
+  min_lr: 5.0e-06
+
+scheduler:
+  fn: LambdaLR
+  parameters: { step_size: 2, gamma: 0.95 }

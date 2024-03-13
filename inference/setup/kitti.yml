@@ -1,0 +1,35 @@
+general:
+  name: kitti_00
+  ## vxp vgg
+  # teacher_setup: /storage/user/lyun/kitti/models/setup_teacher_kitti_vgggem_2023_11_24_00_42_13.yml
+  # teacher_model: /storage/user/lyun/kitti/models/teacher_kitti_vgggem_2023_11_24_00_42_13_last.pth
+  # student_setup: /storage/user/lyun/kitti/models/setup_vxp_kitti_w_vgg_2023_11_25_00_54_01.yml
+  # student_model: /storage/user/lyun/kitti/models/vxp_kitti_w_vgg_2023_11_25_00_54_01_last.pth
+  ## vxp dino
+  # teacher_setup: /storage/user/lyun/kitti/models/setup_teacher_kitti_vgggem_newval_2024_01_08_16_51_00.yml
+  # teacher_model: /storage/user/lyun/kitti/models/teacher_kitti_vgggem_newval_2024_01_08_16_51_00_last.pth
+  # student_setup: /storage/user/lyun/kitti/models/setup_vxp_kitti_newval_w_vgg_2024_01_09_12_11_21.yml
+  # student_model: /storage/user/lyun/kitti/models/vxp_kitti_newval_w_vgg_2024_01_09_12_11_21.pth
+  teacher_setup: /storage/user/lyun/kitti/models/setup_teacher_kitti_vgggem_newval_2024_01_08_16_48_11.yml
+  teacher_model: /storage/user/lyun/kitti/models/teacher_kitti_vgggem_newval_2024_01_08_16_48_11_last.pth
+  student_setup: /storage/user/lyun/kitti/models/setup_vxp_kitti_newval_w_dino_2024_01_09_16_57_28.yml
+  student_model: /storage/user/lyun/kitti/models/vxp_kitti_newval_w_dino_2024_01_09_16_57_28.pth
+  ## cattaneo
+  # teacher_setup: /storage/user/lyun/kitti/models/setup_teacher_kitti_cattaneo_newval_2024_01_11_10_42_54.yml
+  # teacher_model: /storage/user/lyun/kitti/models/teacher_kitti_cattaneo_newval_2024_01_11_10_42_54_last.pth
+  # student_setup: /storage/user/lyun/kitti/models/setup_cattaneo_student_kitti_newval_2024_01_12_00_00_02.yml
+  # student_model: /storage/user/lyun/kitti/models/cattaneo_student_kitti_newval_2024_01_12_00_00_02_last.pth
+
+  # query: /storage/user/lyun/kitti/kitti_00_evaluation_query_th20m_yaw_1runs.pickle
+  # db: /storage/user/lyun/kitti/kitti_00_evaluation_database_th20m_yaw_1runs.pickle
+  query: /storage/user/lyun/kitti/kitti_00_test_region_evaluation_query_th20m_yaw_1runs.pickle
+  db: /storage/user/lyun/kitti/kitti_00_test_region_evaluation_database_th20m_yaw_1runs.pickle
+  k: 100
+  disp_img_tb: False
+  cross_normalize: False
+  save_dir: /storage/user/lyun/kitti
+  num_workers: 4
+  batch_size: 16
+  rebase_dir: null
+  sequence:
+    - 0

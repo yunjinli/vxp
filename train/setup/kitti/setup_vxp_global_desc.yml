@@ -1,0 +1,88 @@
+general:
+  train_pickle_dir: /storage/user/lyun/kitti/vxp_kitti_newval_training_pair_3d_student_p10_n25_yaw.pickle
+  val_pickle_dir: /storage/user/lyun/kitti/vxp_kitti_newval_testing_pair_3d_student_p10_n25_yaw.pickle
+  annotation_dir: /storage/user/lyun/kitti/all_annotation.csv
+  save_dir: /storage/user/lyun/kitti
+  name: vxp_kitti
+
+model:
+  teacher_setup: /storage/user/lyun/kitti/models/setup_teacher_kitti_vgggem_newval_2024_01_08_16_48_11.yml
+  teacher_model: /storage/user/lyun/kitti/models/teacher_kitti_vgggem_newval_2024_01_08_16_48_11_last.pth
+  load_pretrained: True
+  student_pretrained_setup: /storage/user/lyun/kitti/models/setup_vxp_local_kitti_newval_w_dino_2024_01_09_01_29_18.yml
+  student_pretrained_model: /storage/user/lyun/kitti/models/vxp_local_kitti_newval_w_dino_2024_01_09_01_29_18.pth
+  arch: VXIGeM
+  parameters:
+    up_voxel_size: null
+    v2i_pcd_range: null
+    device: null
+    p: 3
+    eps: 0.000001
+    normalize: False
+    dense_output_dim: !!python/tuple [384, 256]
+    # dense_output_dim: !!python/tuple [512, 256]
+
+dataset:
+  batch_size: 16
+  num_workers: 8
+  voxelization: True
+  random_horizontal_mirroring_p: 0.5
+  pcd_coordinate_transformation:
+    OnlinePointAffineTransformation:
+      parameters:
+        {
+          x_axis: [2.34773604e-04, 1.04494081e-02, 9.99945368e-01],
+          y_axis: [-9.99944129e-01, 1.05653538e-02, 1.24365346e-04],
+          z_axis: [-1.05634776e-02, -9.99889606e-01, 1.04513032e-02],
+          trans: [5.70524492e-02, -7.54667181e-02, -2.69386924e-01],
+        }
+    OnlineRotZ:
+      parameters:
+        angle: 90
+        use_degree: true
+    OnlineRotX:
+      parameters:
+        angle: 90
+        use_degree: true
+  pcd_preprocessing:
+    OnlineVoxelization:
+      parameters:
+        {
+          point_cloud_range: [0, -22, -4, 44, 22, 18],
+          max_num_points: 35,
+          voxel_size: [0.4, 0.4, 0.2],
+          max_voxels: 10000,
+        }
+      # parameters: {point_cloud_range: [0, -20, -2.5, 50, 20, 15], max_num_points: 35, voxel_size: [0.75, 0.2, 0.0875], max_voxels: 10000} ## grid size 67 x 200 x 200
+  pcd_data_augmentation:
+    # {}
+    DataAugmentationRandomRigidBodyTransformation:
+      parameters:
+        {
+          x_limit: 1.5,
+          y_limit: 1.5,
+          z_limit: 1.5,
+          pitch_limit: 2,
+          yaw_limit: 10,
+          roll_limit: 2,
+        }
+  img_data_augmentation:
+    ColorJitter:
+      parameters: { brightness: 0.1, contrast: 0.1, saturation: 0.1, hue: 0.1 }
+    RandomAffine:
+      parameters: { degrees: [-5, 5], translate: [0.1, 0.1] }
+loss:
+  fn: SmoothL1Loss ## MSELoss
+  parameters: { reduction: "mean" }
+
+optimizer:
+  fn: Adam
+  parameters:
+    lr: 0.0001
+    weight_decay: 1.0e-06
+  epochs: 50
+  min_lr: 5.0e-06
+
+scheduler:
+  fn: LambdaLR
+  parameters: { step_size: 1, gamma: 0.95 }

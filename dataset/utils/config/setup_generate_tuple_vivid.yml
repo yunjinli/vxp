@@ -1,0 +1,6 @@
+parameter:
+  name: vivid
+  annotation: "/storage/group/dataset_mirrors/01_incoming/vividpp/driving_full/annotations_all.csv"
+  save_dir: "/storage/user/lyun/vivid"
+  pos_th: 10
+  neg_th: 25

@@ -1,0 +1,117 @@
+general:
+  train_pickle_dir: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/full_training_pair_3d_student_p10_n50.pickle"
+  val_pickle_dir: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/full_testing_pair_3d_student_p10_n50.pickle"
+  annotation_dir: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/all_annotation.csv"
+  save_dir: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/"
+  name: vxpext_oxford
+
+model:
+  teacher_setup: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/setup_teacher2d_backbone2d_dino_vits8_gem_linear_p10n25yaw_2023_11_09_01_36_28.yml"
+  teacher_model: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/teacher2d_backbone2d_dino_vits8_gem_linear_p10n25yaw_2023_11_09_01_36_28_last.pth"
+  teacher_desc_type: output
+  arch: VoxelLocalFeatureExtractor
+  parameters:
+    grid_zyx: null
+    voxel_size: null
+    pcd_range: null
+    vfe_feat_channels: [16, 64, 128]
+    middle_spconv_in_channels: 128
+    middle_spconv_out_channels: 384
+    middle_base_channels: 16
+    middle_encoder_channels: !!python/tuple
+      - !!python/tuple [16]
+      - !!python/tuple [32, 64, 64]
+      - !!python/tuple [128, 256, 256]
+      # - !!python/tuple [64, 64, 64]
+      # - !!python/tuple [64, 64, 64]
+      # - !!python/tuple [64, 64, 64]
+    middle_encoder_paddings: !!python/tuple
+      - !!python/tuple
+        - !!python/tuple [1, 1, 1] ## First stage first layer would be submanifold convolution
+      - !!python/tuple
+        - !!python/tuple [1, 1, 1] ## First layer would be spconv
+        - !!python/tuple [1, 1, 1] ## Submanifold convolution
+        - !!python/tuple [1, 1, 1] ## Submanifold convolution
+      - !!python/tuple
+        - !!python/tuple [1, 1, 1] ## First layer would be spconv
+        - !!python/tuple [1, 1, 1] ## Submanifold convolution
+        - !!python/tuple [1, 1, 1] ## Submanifold convolution
+      # - !!python/tuple
+      #   - !!python/tuple [1, 1, 1] ## First layer would be spconv
+      #   - !!python/tuple [1, 1, 1] ## Submanifold convolution
+      #   - !!python/tuple [1, 1, 1] ## Submanifold convolution
+      # - !!python/tuple
+      #   - !!python/tuple [1, 1, 1] ## First layer would be spconv
+      #   - !!python/tuple [1, 1, 1] ## Submanifold convolution
+      #   - !!python/tuple [1, 1, 1] ## Submanifold convolution
+      # - !!python/tuple
+      #   - !!python/tuple [1, 1, 1] ## First layer would be spconv
+      #   - !!python/tuple [1, 1, 1] ## Submanifold convolution
+      #   - !!python/tuple [1, 1, 1] ## Submanifold convolution
+    # middle_encoder_downsampling_other_dim: [False, False, False, False, False]
+    middle_encoder_downsampling_other_dim: [False, True, False]
+  proj_params: ## please give the normalized intrisics
+    fx: 0.75377264
+    fy: 1.00503019
+    cx: 0.50295939
+    cy: 0.50459166
+    R: [[0, -1, 0], [0, 0, -1], [1, 0, 0]]
+dataset:
+  batch_size: 8
+  num_workers: 8
+  voxelization: True
+  random_horizontal_mirroring_p: 0.5
+  pcd_coordinate_transformation:
+    OnlineRotX:
+      parameters: { angle: 180, use_degree: True }
+  pcd_preprocessing:
+    OnlineVoxelization:
+      # parameters: {point_cloud_range: [0, -25, -5, 50, 25, 20], max_num_points: 35, voxel_size: [0.5, 0.25, 0.125], max_voxels: 10000} ## grid size 100 x 200 x 200
+      # parameters: {point_cloud_range: [0, -25, -5, 50, 25, 20], max_num_points: 35, voxel_size: [0.25, 0.25, 0.25], max_voxels: 10000} ## grid size 200 x 200 x 100
+      parameters:
+        {
+          point_cloud_range: [0, -22, -4, 44, 22, 18],
+          max_num_points: 35,
+          voxel_size: [0.4, 0.4, 0.2],
+          max_voxels: 10000,
+        }
+      # parameters: {point_cloud_range: [0, -20, -2.5, 50, 20, 15], max_num_points: 35, voxel_size: [0.75, 0.2, 0.0875], max_voxels: 10000} ## grid size 67 x 200 x 200
+  pcd_data_augmentation:
+    {}
+    # DataAugmentationRandomRigidBodyTransformation:
+    #   parameters:
+    #     {
+    #       x_limit: 1.5,
+    #       y_limit: 1.5,
+    #       z_limit: 1.5,
+    #       pitch_limit: 2,
+    #       yaw_limit: 10,
+    #       roll_limit: 2,
+    #     }
+  img_data_augmentation:
+    ColorJitter:
+      parameters: { brightness: 0.1, contrast: 0.1, saturation: 0.1, hue: 0.1 }
+    # RandomAffine:
+    #   parameters: { degrees: [-5, 5], translate: [0.1, 0.1] }
+loss:
+  fn: SmoothL1Loss ## MSELoss
+  parameters: { reduction: "none" }
+  # fn: CosineSimilarity
+  # parameters: { dim: 1, eps: 0.000001 }
+  inv_depth_weighted_loss: True
+  # fn: MSELoss
+  # parameters: {}
+
+optimizer:
+  fn: Adam
+  parameters:
+    lr: 1.0e-04
+    weight_decay: 1.0e-06
+  epochs: 30
+  min_lr: 5.0e-06
+
+scheduler:
+  # fn: StepLR
+  # parameters: {step_size: 25, gamma: 0.1}
+  fn: LambdaLR
+  parameters: { step_size: 2, gamma: 0.95 }

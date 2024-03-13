@@ -1,0 +1,191 @@
+general:
+  train_pickle_dir: /storage/user/lyun/kitti/vxp_kitti_newval_training_pair_3d_student_p10_n25_yaw.pickle
+  val_pickle_dir: /storage/user/lyun/kitti/vxp_kitti_newval_testing_pair_3d_student_p10_n25_yaw.pickle
+  annotation_dir: /storage/user/lyun/kitti/all_annotation.csv
+  save_dir: /storage/user/lyun/kitti
+  name: cattaneo_student_kitti
+
+model:
+  normalize: False
+  teacher_setup: /storage/user/lyun/kitti/models/setup_teacher_kitti_cattaneo_newval_2024_01_11_10_42_54.yml
+  teacher_model: /storage/user/lyun/kitti/models/teacher_kitti_cattaneo_newval_2024_01_11_10_42_54_last.pth
+  arch: SecondAsppNetvladV2
+  parameters:
+    aspp_dropout: 0.1
+    aspp_in_channels: 128
+    aspp_norm: BN
+    aspp_out_channels: 512
+    aspp_rate:
+      - 6
+      - 12
+      - 18
+    use_depthwise_separable_conv: True
+    encoder_dim: 512
+    gating: False
+    middle_base_channels: 16
+    middle_downsample_dimension: x
+    middle_encoder_channels: !!python/tuple
+    - !!python/tuple
+      - 16
+    - !!python/tuple
+      - 32
+      - 32
+      - 32
+    - !!python/tuple
+      - 64
+      - 64
+      - 64
+    - !!python/tuple
+      - 64
+      - 64
+      - 64
+    - !!python/tuple
+      - 64
+      - 64
+      - 64
+    middle_encoder_downsampling_other_dim:
+    - false
+    - true
+    - false
+    - false
+    - false
+    middle_encoder_paddings: !!python/tuple
+    - !!python/tuple
+      - !!python/tuple
+        - 1
+        - 1
+        - 1
+    - !!python/tuple
+      - !!python/tuple
+        - 1
+        - 1
+        - 1
+      - !!python/tuple
+        - 1
+        - 1
+        - 1
+      - !!python/tuple
+        - 1
+        - 1
+        - 1
+    - !!python/tuple
+      - !!python/tuple
+        - 1
+        - 1
+        - 1
+      - !!python/tuple
+        - 1
+        - 1
+        - 1
+      - !!python/tuple
+        - 1
+        - 1
+        - 1
+    - !!python/tuple
+      - !!python/tuple
+        - 1
+        - 1
+        - 1
+      - !!python/tuple
+        - 1
+        - 1
+        - 1
+      - !!python/tuple
+        - 1
+        - 1
+        - 1
+    - !!python/tuple
+      - !!python/tuple
+        - 1
+        - 1
+        - 1
+      - !!python/tuple
+        - 1
+        - 1
+        - 1
+      - !!python/tuple
+        - 1
+        - 1
+        - 1
+    middle_spconv_in_channels: 128
+    middle_spconv_out_channels: 64
+    num_clusters: 64
+    output_dim: 256
+    pcd_range: null
+    use_depthwise_separable_conv: true
+    vfe_feat_channels:
+    - 32
+    - 128
+    vladv2: true
+    voxel_size: null
+dataset:
+  rebase_dir: null
+  batch_size: 16
+  num_workers: 8
+  voxelization: True
+  random_horizontal_mirroring_p: 0.5
+  pcd_coordinate_transformation:
+    OnlinePointAffineTransformation:
+      parameters:
+        {
+          x_axis: [2.34773604e-04, 1.04494081e-02, 9.99945368e-01],
+          y_axis: [-9.99944129e-01, 1.05653538e-02, 1.24365346e-04],
+          z_axis: [-1.05634776e-02, -9.99889606e-01, 1.04513032e-02],
+          trans: [5.70524492e-02, -7.54667181e-02, -2.69386924e-01],
+        }
+    OnlineRotZ:
+      parameters:
+        angle: 90
+        use_degree: true
+    OnlineRotX:
+      parameters:
+        angle: 90
+        use_degree: true
+  pcd_preprocessing:
+    OnlineVoxelization:
+      # parameters: {point_cloud_range: [0, -25, -5, 50, 25, 20], max_num_points: 35, voxel_size: [0.5, 0.25, 0.125], max_voxels: 10000} ## grid size 100 x 200 x 200
+      # parameters: {point_cloud_range: [0, -25, -5, 50, 25, 20], max_num_points: 35, voxel_size: [0.25, 0.25, 0.25], max_voxels: 10000} ## grid size 200 x 200 x 100
+      parameters:
+        {
+          point_cloud_range: [0, -25, -25, 50, 25, 25],
+          # point_cloud_range: [0, -25, -4, 50, 25, 21],
+          max_num_points: 35,
+          # voxel_size: [0.75, 0.75, 0.75],
+          voxel_size: [0.75, 0.75, 0.375],
+          max_voxels: 10000,
+        }
+      # parameters: {point_cloud_range: [0, -20, -2.5, 50, 20, 15], max_num_points: 35, voxel_size: [0.75, 0.2, 0.0875], max_voxels: 10000} ## grid size 67 x 200 x 200
+  pcd_data_augmentation:
+    # {}
+    DataAugmentationRandomRigidBodyTransformation:
+      parameters:
+        {
+          x_limit: 1.5,
+          y_limit: 1.5,
+          z_limit: 1.5,
+          pitch_limit: 2,
+          yaw_limit: 10,
+          roll_limit: 2,
+        }
+  img_data_augmentation:
+    ColorJitter:
+      parameters: { brightness: 0.1, contrast: 0.1, saturation: 0.1, hue: 0.1 }
+    RandomAffine:
+      parameters: { degrees: [-5, 5], translate: [0.1, 0.1] }
+loss:
+  fn: SmoothL1Loss
+  parameters:
+    reduction: mean
+
+optimizer:
+  epochs: 50
+  fn: Adam
+  min_lr: 5.0e-07
+  parameters:
+    lr: 1.0e-05
+    weight_decay: 1.0e-06
+scheduler:
+  fn: LambdaLR
+  parameters:
+    gamma: 0.95
+    step_size: 1

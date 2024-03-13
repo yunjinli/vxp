@@ -1,0 +1,13 @@
+general:
+  name: vivid_campus_day12
+  annotation: /storage/group/dataset_mirrors/01_incoming/vividpp/driving_full/annotations_all.csv
+  # save_dir: YOUR_SAVE_DIR
+  save_dir: /storage/user/lyun/vivid
+  sequence:
+    - campus_day1
+    - campus_day2
+parameter:
+  threshold: 25
+  yaw: True
+  num_samples: 1500
+  interval: null

@@ -1,0 +1,98 @@
+general:
+  name: oxford
+
+  ## cattaneo
+  # teacher_setup: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/setup_teacher2d_backbone2d_vgg_netvlad_linear_p10n25yaw_2023_11_12_13_30_30.yml"
+  # teacher_model: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/teacher2d_backbone2d_vgg_netvlad_linear_p10n25yaw_2023_11_12_13_30_30_v.pth"
+  # student_setup: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/setup_cattaneo_student_2023_11_26_02_07_20.yml"
+  # student_model: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/cattaneo_student_2023_11_26_02_07_20.pth"
+  ## vxp
+  # teacher_setup: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/setup_teacher2d_backbone2d_fixdino_vits8_gem_linear_p10n25yaw_2024_01_26_12_07_37.yml"
+  # teacher_model: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/teacher2d_backbone2d_fixdino_vits8_gem_linear_p10n25yaw_2024_01_26_12_07_37_last.pth"
+  # student_setup: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/setup_vxpgem_wo_pretrained_2023_11_12_22_19_50.yml"
+  # student_model: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/vxpgem_wo_pretrained_2023_11_12_22_19_50.pth"
+  ## vxp
+  teacher_setup: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/setup_teacher2d_backbone2d_dino_vits8_gem_linear_p10n25yaw_2023_11_09_01_36_28.yml
+  teacher_model: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/teacher2d_backbone2d_dino_vits8_gem_linear_p10n25yaw_2023_11_09_01_36_28_last.pth
+  student_setup: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/setup_vxpgem_w_teacher_p10n25yaw_2023_11_11_00_43_31.yml
+  student_model: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/vxpgem_w_teacher_p10n25yaw_2023_11_11_00_43_31.pth
+
+  ## Without night, snow 19runs
+  # query: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/test_dataset_every_10m_45runs_query_evaluation_query_20m_19runs.pickle"
+  # db: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/test_dataset_every_20m_45runs_database_evaluation_database_20m_19runs.pickle"
+
+  ## Full dataset 10m query / 20m database 23 runs threshold 20m
+  # query: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/evaluation_query_20m.pickle"
+  # db: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/evaluation_database_20m.pickle"
+
+  # Full dataset 10m query / 20m database 23 runs threshold 30m with yaw
+  # query: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/full_q10_db20_evaluation_query_th30m_yaw_23runs.pickle"
+  # db: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/full_q10_db20_evaluation_database_th30m_yaw_23runs.pickle"
+
+  # ## Full dataset 20m query / 20m database 23 runs threshold 25m
+  # query: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/full_q20_db20_evaluation_query_th25m_23runs.pickle"
+  # db: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/full_q20_db20_evaluation_database_th25m_23runs.pickle"
+
+  # ## Full dataset 20m query / 20m database 23 runs threshold 30m
+  # query: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/full_q20_db20_evaluation_query_th30m_23runs.pickle"
+  # db: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/full_q20_db20_evaluation_database_th30m_23runs.pickle"
+
+  # ## Full dataset 10m query / 20m database 23 runs threshold 25m
+  # query: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/full_q10_db20_evaluation_query_th25m_23runs.pickle"
+  # db: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/full_q10_db20_evaluation_database_th25m_23runs.pickle"
+
+  ## Full dataset 20m query / 20m database 23 runs threshold 25m with yaw
+  # query: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/full_q20_db20_evaluation_query_th25m_yaw_23runs.pickle"
+  # db: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/full_q20_db20_evaluation_database_th25m_yaw_23runs.pickle"
+
+  # Full dataset 5m query / 5m database 23 runs threshold 25m with yaw
+  # query: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/full_q5_db5_evaluation_query_th25m_yaw_23runs.pickle"
+  # db: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/full_q5_db5_evaluation_database_th25m_yaw_23runs.pickle"
+
+  # Full dataset 5m query / 5m database 23 runs threshold 25m with yaw
+  query: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/full_q5_db5_evaluation_query_th20m_yaw_23runs.pickle"
+  db: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/full_q5_db5_evaluation_database_th20m_yaw_23runs.pickle"
+
+  ## Full dataset 20m query / 10m database 23 runs threshold 20m
+  # query: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/full_q20_db10_evaluation_query_th20m_yaw_23runs.pickle"
+  # db: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/full_q20_db10_evaluation_database_th20m_yaw_23runs.pickle"
+
+  ## Full dataset 20m query / 5m database 23 runs threshold 20m
+  # query: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/full_q20_db5_evaluation_query_th20m_yaw_23runs.pickle"
+  # db: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/full_q20_db5_evaluation_database_th20m_yaw_23runs.pickle"
+
+  ## Full dataset 10m query / 5m database 23 runs threshold 20m
+  # query: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/full_q10_db5_evaluation_query_th20m_yaw_23runs.pickle"
+  # db: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/full_q10_db5_evaluation_database_th20m_yaw_23runs.pickle"
+
+  disp_img_tb: False
+  cross_normalize: True
+  save_dir: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs"
+  k: 25
+  num_workers: 4
+  batch_size: 16
+  rebase_dir: null
+  sequence:
+    - 2014-11-14-16-34-33 ## night
+    - 2014-11-18-13-20-12 ## clouds, sun
+    - 2014-12-02-15-30-08 ## overcast
+    - 2014-12-09-13-21-02 ## overcast
+    - 2014-12-10-18-10-50 ## night
+    - 2014-12-12-10-45-15 ## overcast
+    - 2014-12-16-09-14-09 ## sun
+    - 2014-12-16-18-44-24 ## night
+    - 2015-02-03-08-45-10 ## snow
+    - 2015-02-10-11-58-05 ## overcast
+    - 2015-02-13-09-16-26 ## overcast
+    - 2015-02-17-14-42-12 ## sun
+    - 2015-03-10-14-18-10 ## roadworks, sun
+    - 2015-03-17-11-08-44 ## overcast
+    - 2015-05-19-14-06-38 ## overcast
+    - 2015-06-09-15-06-29 ## detour, overcast, roadworks
+    - 2015-08-12-15-04-18 ## sun
+    - 2015-08-13-16-02-58 ## overcast
+    - 2015-08-14-14-54-57 ## overcast, roadworks
+    - 2015-08-28-09-50-22 ## sun
+    - 2015-10-30-13-52-14 ## overcast
+    - 2015-11-12-11-22-05 ## roadworks, sun
+    - 2015-11-13-10-28-08 ## overcast, sun

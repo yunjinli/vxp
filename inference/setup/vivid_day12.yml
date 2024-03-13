@@ -1,0 +1,27 @@
+general:
+  name: vivid_day12
+  ## vxp
+  # teacher_setup: /storage/user/lyun/vivid/models/setup_teacher_vivid_2023_11_20_21_35_31.yml
+  # teacher_model: /storage/user/lyun/vivid/models/teacher_vivid_2023_11_20_21_35_31_v.pth
+  # teacher_setup: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/setup_teacher_vivid_2023_11_15_02_30_20.yml
+  # teacher_model: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/teacher_vivid_2023_11_15_02_30_20_last.pth
+  # student_setup: /storage/user/lyun/vivid/models/setup_vxp_vivid_jim_coors_2023_11_22_11_34_37.yml
+  # student_model: /storage/user/lyun/vivid/models/vxp_vivid_jim_coors_2023_11_22_11_34_37.pth
+  ## model trained on oxford
+  teacher_setup: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/setup_teacher2d_backbone2d_dino_vits8_gem_linear_p10n25yaw_2023_11_09_01_36_28.yml
+  teacher_model: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/teacher2d_backbone2d_dino_vits8_gem_linear_p10n25yaw_2023_11_09_01_36_28_last.pth
+  student_setup: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/setup_vxpgem_w_teacher_p10n25yaw_2023_11_11_00_43_31_vivid_intrisics.yml
+  student_model: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/vxpgem_w_teacher_p10n25yaw_2023_11_11_00_43_31.pth
+
+  query: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/vivid_day12_evaluation_query_th25m_yaw_2runs_every5m.pickle"
+  db: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/vivid_day12_evaluation_database_th25m_yaw_2runs_every5m.pickle"
+  k: 100
+  disp_img_tb: False
+  cross_normalize: False
+  save_dir: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs"
+  num_workers: 4
+  batch_size: 16
+  rebase_dir: null
+  sequence:
+    - day1
+    - day2

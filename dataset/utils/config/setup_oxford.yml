@@ -1,0 +1,19 @@
+parameter:
+  base_dir: /storage/group/dataset_mirrors/01_incoming/Oxford_RobotCar/
+  ins_dir: /storage/user/lyun/data/gps/
+  save_dir: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/
+  lidar_dir: null ## Set to null when normal
+  cam_central: False
+  max_depth: 50.0
+  max_lateral: 25.0
+  max_vertical: 25.0
+  depth_at_least: 30.0
+  every_x_meter: 5.0
+  remove_ground:
+    plane_error_threshold: 0.1
+    ransac_threshold: 0.2
+    ransac_iteration: 1000
+  # remove_ground: null
+  save_submap_with_ground: False
+  write_to_annotation: True
+  sequence: []

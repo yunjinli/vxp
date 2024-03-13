@@ -1,0 +1,20 @@
+general:
+  name: kitti_00
+  annotation: /storage/user/lyun/kitti/all_annotation.csv
+  # save_dir: YOUR_SAVE_DIR
+  save_dir: /storage/user/lyun/kitti
+  sequence:
+    - 0
+  test_region:
+    p:
+      0:
+        [
+          [613180, 4116330],
+          [613050, 4116230],
+          [613050, 4116570],
+          [613135, 4116455],
+        ]
+    width: 50
+parameter:
+  threshold: 20
+  yaw: True
