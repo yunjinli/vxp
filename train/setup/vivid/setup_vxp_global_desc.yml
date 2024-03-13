@@ -1,18 +1,19 @@
 general:
+  ## ====== Modify only this section ======
   train_pickle_dir: /storage/user/lyun/vivid/vxp_vivid_training_pair_3d_student_p10_n25.pickle ## Training row ID in annotation.csv, note that this is not the picke you train the teacher network
   val_pickle_dir: /storage/user/lyun/vivid/vxp_vivid_testing_pair_3d_student_p10_n25.pickle ## Testing row ID in annotation.csv, note that this is not the picke you train the teacher network
   annotation_dir: /storage/group/dataset_mirrors/01_incoming/vividpp/driving_full/annotations_all.csv ## Location of the annotation.csv
   save_dir: /storage/user/lyun/vivid/ ## Location to save the model and log
   name: vxp_vivid
-
+  ## ======================================
 model:
+  ## ====== Modify only this section ======
   teacher_setup: /storage/user/lyun/vivid/models/setup_teacher_vivid_2023_11_20_21_35_31.yml
   teacher_model: /storage/user/lyun/vivid/models/teacher_vivid_2023_11_20_21_35_31_v.pth
   load_pretrained: True
-  # student_pretrained_setup: /storage/user/lyun/vivid/models/setup_vxp_local_vivid_wo_invd_2024_03_10_20_42_51.yml
-  # student_pretrained_model: /storage/user/lyun/vivid/models/vxp_local_vivid_wo_invd_2024_03_10_20_42_51.pth
   student_pretrained_setup: /storage/user/lyun/vivid/models/setup_vxp_local_vivid_jim_coors_2023_11_22_01_09_16.yml
   student_pretrained_model: /storage/user/lyun/vivid/models/vxp_local_vivid_jim_coors_2023_11_22_01_09_16.pth
+  ## ======================================
   arch: VXIGeM
   parameters:
     up_voxel_size: null

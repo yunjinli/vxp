@@ -1,5 +1,5 @@
 parameter:
-  name: oxford
+  name: oxford_test
   annotation: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/all_annotation.csv"
   save_dir: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/"
   removed_sequences: []

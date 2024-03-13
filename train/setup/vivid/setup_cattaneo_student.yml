@@ -1,14 +1,17 @@
 general:
+  ## ====== Modify only this section ======
   train_pickle_dir: /storage/user/lyun/vivid/vxp_vivid_training_pair_3d_student_p10_n25.pickle ## Training row ID in annotation.csv, note that this is not the picke you train the teacher network
   val_pickle_dir: /storage/user/lyun/vivid/vxp_vivid_testing_pair_3d_student_p10_n25.pickle ## Testing row ID in annotation.csv, note that this is not the picke you train the teacher network
   annotation_dir: /storage/group/dataset_mirrors/01_incoming/vividpp/driving_full/annotations_all.csv ## Location of the annotation.csv
   save_dir: /storage/user/lyun/vivid/ ## Location to save the model and log
   name: cattaneo_student_vivid
-
+  ## ======================================
 model:
-  normalize: False
+  ## ====== Modify only this section ======
   teacher_setup: /storage/user/lyun/vivid/models/setup_teacher_vivid_cattaneo_2023_11_24_17_24_56.yml
   teacher_model: /storage/user/lyun/vivid/models/teacher_vivid_cattaneo_2023_11_24_17_24_56_last.pth
+  ## ======================================
+  normalize: False
   arch: SecondAsppNetvladV2
   parameters:
     aspp_dropout: 0.1

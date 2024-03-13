@@ -1,13 +1,11 @@
 general:
-  # train_pickle_dir: /storage/user/lyun/vivid/vxp_vivid_day1_training_queries_baseline_p10_n25.pickle
-  # val_pickle_dir: /storage/user/lyun/vivid/vxp_vivid_day1_test_queries_baseline_p10_n25.pickle
+  ## ====== Modify only this section ======
   train_pickle_dir: /storage/user/lyun/vivid/vxp_vivid_training_queries_baseline_p10_n25_yaw.pickle
   val_pickle_dir: /storage/user/lyun/vivid/vxp_vivid_test_queries_baseline_p10_n25_yaw.pickle
-  # train_pickle_dir: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/vxpp_training_queries_baseline_p10_n25.pickle
-  # val_pickle_dir: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/vxpp_test_queries_baseline_p10_n25.pickle
+  annotation_dir: /storage/group/dataset_mirrors/01_incoming/vividpp/driving_full/annotations_all.csv
   save_dir: /storage/user/lyun/vivid/
   name: dinogem_vivid
-
+  ## ======================================
 model:
   backbone:
     arch: DinoViTWrapper
@@ -41,7 +39,7 @@ dataset:
     ToTensor:
       parameters: {}
     Resize:
-      parameters: { size: [240, 320] }
+      parameters: { size: [224, 224] }
     Normalize:
       parameters: { mean: [0.485, 0.456, 0.406], std: [0.229, 0.224, 0.225] }
   data_augmentation:

@@ -1,12 +1,10 @@
 general:
-  # train_pickle_dir: /storage/user/lyun/vivid/vxp_vivid_day1_training_queries_baseline_p10_n25.pickle
-  # val_pickle_dir: /storage/user/lyun/vivid/vxp_vivid_day1_test_queries_baseline_p10_n25.pickle
+  ## ====== Modify only this section ======
   train_pickle_dir: /storage/user/lyun/vivid/vxp_vivid_training_queries_baseline_p10_n25_yaw.pickle
   val_pickle_dir: /storage/user/lyun/vivid/vxp_vivid_test_queries_baseline_p10_n25_yaw.pickle
-  # train_pickle_dir: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/vxpp_training_queries_baseline_p10_n25.pickle
-  # val_pickle_dir: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/vxpp_test_queries_baseline_p10_n25.pickle
   save_dir: /storage/user/lyun/vivid/
   name: cattaneo_teacher_vivid
+  ## ======================================
 model:
   pretrained: null
   backbone:

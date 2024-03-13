@@ -70,7 +70,7 @@ T_w_imu = transform_from_rot_trans(R, t)
 
 ## Training Tuples
 
-Once the annotation.csv file is created, we can start generate the training tuples by running the script. Note that the corresponding [setup file](../dataset/utils/config/setup_generate_tuple.yml) has to be modified as well.
+Once the annotation.csv file is created, we can start generate the training tuples by running the script. Note that the corresponding setup file under [here](../dataset/utils/config/) has to be modified as well.
 
 ```
 cd dataset/utils

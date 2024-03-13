@@ -1,0 +1,4 @@
+*.sbatch
+log
+__pycache__/
+tb_runs

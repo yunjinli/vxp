@@ -1,8 +1,10 @@
 general:
+  ## ====== Modify only this section ======
   train_pickle_dir: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/vxp_training_queries_baseline_p10_n25_yaw.pickle
   val_pickle_dir: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/vxp_test_queries_baseline_p10_n25_yaw.pickle
   save_dir: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/"
   name: cattaneo_teacher_oxford
+  ## ======================================
 model:
   backbone:
     arch: vgg16

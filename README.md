@@ -10,7 +10,11 @@ We propose a novel Voxel-Cross-Pixel (VXP) approach, which establishes voxel and
 git clone https://github.com/yunjinli/vxp.git
 cd vxp
 conda create -n VXP python=3.10 -y
-pip install -r requirements.txt
+conda activate VXP
+pip install torch torchvision numpy pandas tqdm tensorboard psutil scikit-learn bitarray pytorch-metric-learning==0.9.94 torchinfo
+pip install -U openmim
+mim install mmengine 'mmcv>=2.0.0rc4' 'mmdet>=3.0.0' 'mmdet3d>=1.1.0'
+pip install 'git+https://github.com/facebookresearch/detectron2.git'
 ```
 
 For sparse 3D convolution, we're using spconv library. You can follow the detailed installation guide on their [repository](https://github.com/traveller59/spconv). Or you can simply run the following command with specific cuda version (I'm using CUDA 12.0).

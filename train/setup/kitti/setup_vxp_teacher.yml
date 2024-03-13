@@ -1,9 +1,10 @@
 general:
+  ## ====== Modify only this section ======
   train_pickle_dir: /storage/user/lyun/kitti/vxp_kitti_newval_training_queries_baseline_p10_n25_yaw.pickle
   val_pickle_dir: /storage/user/lyun/kitti/vxp_kitti_newval_test_queries_baseline_p10_n25_yaw.pickle
   save_dir: /storage/user/lyun/kitti
   name: dinogem_kitti
-
+  ## ======================================
 model:
   pretrained: null
   backbone:

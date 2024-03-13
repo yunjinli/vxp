@@ -88,9 +88,6 @@ class VXIGeM(nn.Module):
         submap_embs = self.voxel_feat_ext(
             features, num_points, coors, batch_size)
         proj_uv = self.proj(submap_embs.indices.detach().double())
-        ## include inverse depth
-        proj_desc = submap_embs.features[proj_uv[:, 4].int()] * proj_uv[:, 3].reshape(proj_uv.shape[0], 1).float()
-        ## Ignore inverse depth
-        # proj_desc = submap_embs.features[proj_uv[:, 4].int()]
+        proj_desc = submap_embs.features[proj_uv[:, 4].int()]
         
         return self.gem(proj_desc, proj_uv[:, 0].int())
