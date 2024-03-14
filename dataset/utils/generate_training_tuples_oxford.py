@@ -58,166 +58,6 @@ def check_in_test_set(northing, easting, points, x_width, y_width):
             break
     return in_test_set
 
-
-def construct_query_dict_new(df_centroids, filename, positive_th):
-    '''
-    Since the old way constructing the training tuple is quite bruto-force,
-    we are afraid that if might have bad impact on the training, therefore, we
-    refer to the way how Cattaneo's way of doing this.
-    '''
-    # Generate tree that each neighbors are within 5 meter
-    tree = KDTree(df_centroids[['northing', 'easting']])
-    ind_nn = tree.query_radius(df_centroids[['northing', 'easting']], r=5)
-    assert len(df_centroids) == len(ind_nn)
-    # queries_online = {}
-    # the index is the row_id and the value is the label
-    labels = np.zeros(len(ind_nn), dtype=np.int32)
-    has_label = []  # Which row from the original annotation already has label
-    label = 1
-    label_centroid = []
-
-    for i in tqdm(range(len(ind_nn))):
-        query = df_centroids.iloc[i]["timestamp"]
-        run = df_centroids.iloc[i]["date"]
-        # Apart from only considering purely on distance,
-        # here we also consider the yaw angle,
-        # and only accept yaw difference liying in 0.5 rad / 28.66 degree
-        positives = np.setdiff1d(ind_nn[i], [i]).tolist()
-        positives_yaw = []
-        for pos in positives:
-            diff = math.fabs(
-                df_centroids.iloc[i]['yaw'] - df_centroids.iloc[pos]['yaw'])
-            while diff >= 2 * math.pi:
-                diff -= 2*math.pi
-            if diff >= math.pi:
-                diff -= 2 * math.pi
-            if math.fabs(diff) < 0.5:
-                positives_yaw.append(pos)
-        positives_yaw = np.array(positives_yaw)
-        # queries_online[i] = {"query_img": df_centroids.iloc[i]['img_path'], "query_submap": df_centroids.iloc[i]['submap_path'], "date": run, "timestamp": query}
-
-        # If row i doesn't have label yet, we make row i into a
-        # label_centroid and give row i a label id, also give all
-        # of its neighbors the same label id
-        if i not in has_label:
-            label_centroid.append([df_centroids.iloc[i]['northing'],
-                                   df_centroids.iloc[i]['easting'],
-                                   df_centroids.iloc[i]['yaw']])
-            labels[i] = label
-            has_label.append(i)
-            for j in positives_yaw:
-                if j not in has_label:
-                    labels[j] = label
-                    has_label.append(j)
-            label += 1
-
-    logger.info(f"Number of labels: {label-1}")
-    # Some of the label id might only contains a few sample,
-    # we have to delete them
-
-    remove_label = []
-    new_centroids = []
-    # Iterate through label id
-    for i in range(1, label):
-        # if label id only has samples less than 5,
-        # we put this id into remove buffer
-        if (labels == i).sum() < 5:
-            remove_label.append(i)
-            logger.info(
-                f"There are only {(labels == i).sum()} < 5 samples in label {i}, put into the remove label buffer")
-        # Otherwise, we put into a new label centroid
-        else:
-            new_centroids.append(label_centroid[i])
-
-    # new_labels = []
-    # the index is the row_id and the value is the label
-    new_labels = np.zeros(len(ind_nn), dtype=np.int32)
-    queries_new = {}
-    # queries_new_online = {}
-    # count = 0
-    df_new = pd.DataFrame({})
-    for i in range(len(labels)):
-        if labels[i] in remove_label:
-            pass
-            # _ = queries_online.pop(i)
-        else:
-            # df_new = df_new.append(df_centroids.iloc[i], ignore_index=True)
-            new_row = pd.DataFrame([{'timestamp': df_centroids.iloc[i]['timestamp'], 'date': df_centroids.iloc[i]['date'], 'northing': df_centroids.iloc[i]['northing'],
-                                   'easting': df_centroids.iloc[i]['easting'], 'yaw': df_centroids.iloc[i]['yaw'], 'submap_path': df_centroids.iloc[i]['submap_path'], 'img_path': df_centroids.iloc[i]['img_path']}])
-            df_new = pd.concat([df_new, new_row], ignore_index=True)
-            # new_labels.append(labels[i])
-            new_labels[i] = labels[i]
-            # count += 1
-    # new_labels = np.array(new_labels)
-    # new_labels serves as a map where the index = row id and value = label (1, ...)
-    assert new_labels.shape[0] == len(df_centroids)
-    # tree_new = KDTree(df_new[['northing', 'easting']])
-    # ind_nn = tree_new.query_radius(df_new[['northing', 'easting']], r=5)
-    # for i in tqdm(range(len(ind_nn))):
-    #     query = int(df_new.iloc[i]["timestamp"])
-    #     run = df_new.iloc[i]["date"]
-    #     positives = np.setdiff1d(ind_nn[i], [i]).tolist()
-    #     positives_yaw = []
-    #     for pos in positives:
-    #         diff = math.fabs(df_new.iloc[i]['yaw'] - df_new.iloc[pos]['yaw'])
-    #         while diff >= 2 * math.pi:
-    #             diff -= 2 * math.pi
-    #         if diff >= math.pi:
-    #             diff -= 2 * math.pi
-    #         if math.fabs(diff) < 0.5:
-    #             positives_yaw.append(pos)
-    #     positives_yaw = np.array(positives_yaw)
-    #     # queries_new_online[i] = {"query_img": df_new.iloc[i]['img_path'], "query_submap": df_new.iloc[i]['submap_path'], "date": run, "timestamp": query}
-
-    # Store the valid label := Label that has more than 5 samples
-    valid_labels = set(range(1, label)) - set(remove_label)
-    valid_labels = np.array(list(valid_labels))
-    valid_labels.sort()
-    assert valid_labels.shape[0] == len(new_centroids)
-    logger.info(f"Generate {valid_labels.shape[0]} labels")
-    new_centroids = np.array(new_centroids)
-    centroid_tree = KDTree(new_centroids[:, 0:2])
-    close_labels = centroid_tree.query_radius(
-        new_centroids[:, 0:2], r=positive_th)
-    ignore_in_training = {}
-    for i in range(len(close_labels)):
-        positives = np.setdiff1d(close_labels[i], [i]).tolist()
-        close_labels_yaw = []
-        for pos in positives:
-            diff = math.fabs(new_centroids[i][2] - new_centroids[pos][2])
-            while diff >= 2 * math.pi:
-                diff -= 2*math.pi
-            if diff >= math.pi:
-                diff -= 2 * math.pi
-            if math.fabs(diff) < 0.5:
-                close_labels_yaw.append(valid_labels[pos])
-        close_labels_yaw = np.array(close_labels_yaw)
-        ignore_in_training[valid_labels[i]] = close_labels_yaw
-
-    # queries_new['base_folder'] = runs_folder
-    # queries_new['pc_folder'] = pointcloud_fols
-    # queries_new_online['base_folder'] = runs_folder
-    # queries_new_online['pc_folder'] = pointcloud_fols
-
-    # with open(filename, 'wb') as handle:
-    #    pickle.dump(queries_new, handle, protocol=pickle.HIGHEST_PROTOCOL)
-    # online_filename = filename.replace('.pickle', '_online.pickle')
-
-    # with open(online_filename, 'wb') as handle:
-    #     pickle.dump(queries_new_online, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
-    # logger.info(f"Query has been saved to {os.path.abspath(online_filename)}")
-
-    label_filename = filename.replace('.pickle', '_label.pickle')
-    with open(label_filename, 'wb') as handle:
-        label_dict = {'valid_labels': valid_labels, 'labels': new_labels,
-                      'ignore_in_training': ignore_in_training}
-        pickle.dump(label_dict, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
-    logger.info(
-        f"Label file has been saved to {os.path.abspath(label_filename)}")
-
-
 def construct_query_dict(df_centroids, filename, positive_th, negative_th, yaw=False):
     logger.info(f"{df_centroids[['northing','easting']]}")
     tree = KDTree(df_centroids[['northing', 'easting']])
@@ -274,8 +114,6 @@ if __name__ == "__main__":
         description='Generate training / validation tuples for Oxford RobotCar dataset')
     parser.add_argument('--config', type=str,
                         default="config/setup_generate_tuple.yml")
-    parser.add_argument('--mode', type=str, default='bruto-force',
-                        help='Mode', choices=['bruto-force', 'label'])
     args = parser.parse_args()
 
     setup = load_setup_file(args.config)
@@ -341,13 +179,7 @@ if __name__ == "__main__":
         tuple_name = setup['parameter']['name'] + '_'
     else:
         tuple_name = ''
-    if args.mode.lower() == 'bruto-force':
-        construct_query_dict(df_train, os.path.join(
-            setup['parameter']['save_dir'], f"{tuple_name}training_queries_baseline_p{pos_th}_n{neg_th}{yaw}.pickle"), pos_th, neg_th, yaw=setup['parameter']['yaw'])
-        construct_query_dict(df_test, os.path.join(
-            setup['parameter']['save_dir'], f"{tuple_name}test_queries_baseline_p{pos_th}_n{neg_th}{yaw}.pickle"), pos_th, neg_th, yaw=setup['parameter']['yaw'])
-    elif args.mode.lower() == 'label':
-        construct_query_dict_new(df_train, os.path.join(
-            setup['parameter']['save_dir'], f"{tuple_name}training_queries_p{pos_th}.pickle"), pos_th)
-        construct_query_dict_new(df_test, os.path.join(
-            setup['parameter']['save_dir'], f"{tuple_name}test_queries_p{pos_th}.pickle"), pos_th)
+    construct_query_dict(df_train, os.path.join(
+        setup['parameter']['save_dir'], f"{tuple_name}training_queries_baseline_p{pos_th}_n{neg_th}{yaw}.pickle"), pos_th, neg_th, yaw=setup['parameter']['yaw'])
+    construct_query_dict(df_test, os.path.join(
+        setup['parameter']['save_dir'], f"{tuple_name}test_queries_baseline_p{pos_th}_n{neg_th}{yaw}.pickle"), pos_th, neg_th, yaw=setup['parameter']['yaw'])
