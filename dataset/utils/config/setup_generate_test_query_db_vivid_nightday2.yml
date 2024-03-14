@@ -1,7 +1,6 @@
 general:
   name: vivid_nightday2
   annotation: /storage/group/dataset_mirrors/01_incoming/vividpp/driving_full/annotations_all.csv
-  # save_dir: YOUR_SAVE_DIR
   save_dir: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs
   sequence:
     - night

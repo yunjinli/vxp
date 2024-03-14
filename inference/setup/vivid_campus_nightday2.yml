@@ -1,17 +1,11 @@
 general:
   name: vivid_campus_nightday2
   ## vxp
-  # teacher_setup: /storage/user/lyun/vivid/models/setup_teacher_vivid_2023_11_20_21_35_31.yml
-  # teacher_model: /storage/user/lyun/vivid/models/teacher_vivid_2023_11_20_21_35_31_v.pth
-  # # student_setup: /storage/user/lyun/vivid/models/setup_vxp_vivid_mariia_coors_2023_11_22_10_58_27.yml
-  # # student_model: /storage/user/lyun/vivid/models/vxp_vivid_mariia_coors_2023_11_22_10_58_27.pth
-  # student_setup: /storage/user/lyun/vivid/models/setup_vxp_vivid_jim_coors_2023_11_22_11_34_37.yml
-  # student_model: /storage/user/lyun/vivid/models/vxp_vivid_jim_coors_2023_11_22_11_34_37.pth
-  ## cattaneo
-  teacher_setup: /storage/user/lyun/vivid/models/setup_teacher_vivid_cattaneo_2023_11_24_17_24_56.yml
-  teacher_model: /storage/user/lyun/vivid/models/teacher_vivid_cattaneo_2023_11_24_17_24_56_last.pth
-  student_setup: /storage/user/lyun/vivid/models/setup_cattaneo_student_vivid_2023_11_25_12_35_08.yml
-  student_model: /storage/user/lyun/vivid/models/cattaneo_student_vivid_2023_11_25_12_35_08_last.pth
+  teacher_setup: /storage/user/lyun/vivid/models/setup_teacher_vivid_2023_11_20_21_35_31.yml
+  teacher_model: /storage/user/lyun/vivid/models/teacher_vivid_2023_11_20_21_35_31_v.pth
+  student_setup: /storage/user/lyun/vivid/models/setup_vxp_vivid_jim_coors_2023_11_22_11_34_37.yml
+  student_model: /storage/user/lyun/vivid/models/vxp_vivid_jim_coors_2023_11_22_11_34_37.pth
+
   query: /storage/user/lyun/vivid/vivid_campus_nightday2_evaluation_query_th25m_yaw_2runs_everyNonem.pickle
   db: /storage/user/lyun/vivid/vivid_campus_nightday2_evaluation_database_th25m_yaw_2runs_everyNonem.pickle
   k: 25

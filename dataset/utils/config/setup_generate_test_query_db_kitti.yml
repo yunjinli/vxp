@@ -1,7 +1,6 @@
 general:
   name: kitti_00
   annotation: /storage/user/lyun/kitti/all_annotation.csv
-  # save_dir: YOUR_SAVE_DIR
   save_dir: /storage/user/lyun/kitti
   sequence:
     - 0

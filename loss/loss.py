@@ -118,37 +118,6 @@ class CrossHardTripletMinerWithMasks:
                 d_embeddings, positives_mask, negatives_mask, batch_size)
         return hard_triplets
 
-    # def mine(self, embeddings, positives_mask, negatives_mask, batch_size):
-    #     # Based on pytorch-metric-learning implementation
-    #     dist_mat = self.distance(embeddings)
-    #     logger.debug(f"Distance matrix: {dist_mat}")
-
-    #     (hardest_positive_dist, hardest_positive_indices), a1p_keep = get_max_per_row(
-    #         dist_mat[:batch_size, batch_size:], positives_mask)
-    #     logger.debug(f"positives_mask: {positives_mask}")
-    #     logger.debug(f"hardest_positive_indices: {hardest_positive_indices}")
-    #     logger.debug(f"a1p_keep: {a1p_keep}")
-
-    #     (hardest_negative_dist, hardest_negative_indices), a2n_keep = get_min_per_row(
-    #         dist_mat[:batch_size, batch_size:], negatives_mask)
-    #     logger.debug(f"negatives_mask: {negatives_mask}")
-    #     logger.debug(f"hardest_negative_indices: {hardest_negative_indices}")
-    #     logger.debug(f"a2n_keep: {a2n_keep}")
-
-    #     a_keep_idx = torch.where(a1p_keep & a2n_keep)
-    #     logger.debug(f"a_keep_idx: {a_keep_idx}")
-
-    #     a = torch.arange(dist_mat.size(0)).to(
-    #         hardest_positive_indices.device)[a_keep_idx]
-    #     p = hardest_positive_indices[a_keep_idx] + batch_size
-    #     n = hardest_negative_indices[a_keep_idx] + batch_size
-    #     self.max_pos_pair_dist = torch.max(hardest_positive_dist).item()
-    #     self.max_neg_pair_dist = torch.max(hardest_negative_dist).item()
-    #     self.mean_pos_pair_dist = torch.mean(hardest_positive_dist).item()
-    #     self.mean_neg_pair_dist = torch.mean(hardest_negative_dist).item()
-    #     self.min_pos_pair_dist = torch.min(hardest_positive_dist).item()
-    #     self.min_neg_pair_dist = torch.min(hardest_negative_dist).item()
-    #     return a, p, n
     def mine(self, embeddings, positives_mask, negatives_mask, batch_size):
         # Based on pytorch-metric-learning implementation
         dist_mat = self.distance(embeddings)
@@ -218,15 +187,7 @@ def get_max_per_row(mat, mask):
 def get_min_per_row(mat, mask):
     non_inf_rows = torch.any(mask, dim=1)
     mat_masked = mat.clone()
-    # print(mask)
-    # print(mask.dtype)
-    # print(mask.shape)
-    # print(~mask)
     mat_masked[~mask] = float('inf')
-    # print(non_inf_rows)
-    # print(mat_masked)
-    # print(mat_masked.type)
-    # print(torch.min(mat_masked, dim=1))
     return torch.min(mat_masked, dim=1), non_inf_rows
 
 
