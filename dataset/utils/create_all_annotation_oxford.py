@@ -37,15 +37,9 @@ def create_all_annotation(dir='/storage/user/lyun/Oxford_Robocar/submap', save_d
     for root, dirs, files in os.walk(dir):
         for dirname in sorted(dirs):
             sub_annotation_path = os.path.join(dir, dirname, f"annotation_{dirname}.csv")
-            # sub_annotation_path_fix = os.path.join(dir, dirname, f"fixed_annotation_{dirname}.csv")
-            # if os.path.exists(sub_annotation_path_fix):
-            #     sub_annotations_path.append(sub_annotation_path_fix)
-            # else:
-            #     sub_annotations_path.append(sub_annotation_path)
             sub_annotations_path.append(sub_annotation_path)
     for path in sub_annotations_path:
-        logger.info(f"{path}")
-    # logger.info(f"{len(sub_annotations_path)} sub-annotation files found")
+        logger.info(f"Sub-annotations to be combined: {path}")
     all_annotation = pd.DataFrame({})
     counter = 0
     for sub_annotation_path in sub_annotations_path:

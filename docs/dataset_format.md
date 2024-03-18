@@ -34,21 +34,15 @@ Oxford_RobotCar/
   - 2015-11-13-10-28-08
 ```
 
-When the structure of the data meet the above requirement, the parser should be working off-the-shelf
+When the structure of the data meets the above requirement, the parser should be able to work off-the-shelf.
 
 ```
 cd dataset/utils
 python generate_dataset_oxford.py --config config/setup_oxford.yml
 ```
 
-This would parse all the sequences in the base*dir specified in the [setup_oxford.yml](../dataset/utils/config/setup_oxford.yml)
-After parsing each sequence, the processed data would be saved in the save_dir with its own annotation*[squence_date].csv
-
-```
-python create_all_annotation_oxford.py --save_dir [YOUR_SAVE_DIR]
-```
-
-This would concatenate all the sub-annotation.csv in each sequence and create an all_annotation.csv in the save_dir.
+This would parse all the sequences in the base_dir specified in the [setup_oxford.yml](../dataset/utils/config/setup_oxford.yml)
+After parsing each sequence, the processed data would be saved in the save_dir with its own annotation\_[squence_date].csv. Finally, all the existing sub-annotation.csv would be combined to form an all_annotation.csv.
 
 ### ViViD++ dataset
 
@@ -61,7 +55,7 @@ cd dataset/utils/
 python generate_dataset_kitti.py --kitti_odom_color <PATH_TO_KITTI_ODOM_COLOR> --SemanticKitti <PATH_TO_SEMANTIC_KITTI> --pose_base_dir <PATH_TO_POSE_DIR> --save_dir <PATH_TO_SAVE_DIR>
 ```
 
-Note that as pykitti package try to substract its origin for each sequence when computing poses, we'll have to slight modify the [code](https://github.com/utiasSTARS/pykitti/blob/master/pykitti/utils.py) in line 141 as follow:
+Note that as pykitti package try to substract its origin for each sequence when computing poses, we'll have to slightly modify the [code](https://github.com/utiasSTARS/pykitti/blob/master/pykitti/utils.py) in line 141 as follow:
 
 ```
 ## T_w_imu = transform_from_rot_trans(R, t - origin)
