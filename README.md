@@ -4,7 +4,7 @@
 
 We propose a novel Voxel-Cross-Pixel (VXP) approach, which establishes voxel and pixel correspondences in a self-supervised manner and brings them into a shared feature space. We achieve state-of-the-art performance in cross-modal retrieval on the Oxford RobotCar, ViViD++ datasets and KITTI benchmark, while maintaining high uni-modal global localization accuracy.
 
-| VXP in Action                                 |                                               |
+|                                               |                                               |
 | --------------------------------------------- | --------------------------------------------- |
 | ![2d3d](/assets/day1_evening_video_2D-3D.gif) | ![3d2d](/assets/day1_evening_video_3D-2D.gif) |
 | ![2d2d](/assets/day1_evening_video_2D-2D.gif) | ![3d3d](/assets/day1_evening_video_3D-3D.gif) |
