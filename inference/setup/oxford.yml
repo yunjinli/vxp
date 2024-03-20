@@ -1,9 +1,9 @@
 general:
   name: oxford
-  teacher_setup: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/setup_teacher2d_backbone2d_dino_vits8_gem_linear_p10n25yaw_2023_11_09_01_36_28.yml
-  teacher_model: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/teacher2d_backbone2d_dino_vits8_gem_linear_p10n25yaw_2023_11_09_01_36_28_last.pth
-  student_setup: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/setup_vxpgem_w_teacher_p10n25yaw_2023_11_11_00_43_31.yml
-  student_model: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/vxpgem_w_teacher_p10n25yaw_2023_11_11_00_43_31.pth
+  teacher_setup: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/setup_dinogem_oxford_2024_03_19_00_15_28.yml"
+  teacher_model: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/dinogem_oxford_2024_03_19_00_15_28_last.pth"
+  student_setup: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/setup_vxp_oxford_2024_03_20_20_45_05.yml
+  student_model: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/vxp_oxford_2024_03_20_20_45_05.pth
   # Full dataset 5m query / 5m database 23 runs threshold 20m with yaw
   query: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/full_q5_db5_evaluation_query_th20m_yaw_23runs.pickle"
   db: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/full_q5_db5_evaluation_database_th20m_yaw_23runs.pickle"

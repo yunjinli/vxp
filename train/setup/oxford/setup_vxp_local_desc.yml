@@ -8,8 +8,8 @@ general:
   ## ======================================
 model:
   ## ====== Modify only this section ======
-  teacher_setup: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/setup_teacher2d_backbone2d_dino_vits8_gem_linear_p10n25yaw_2023_11_09_01_36_28.yml"
-  teacher_model: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/teacher2d_backbone2d_dino_vits8_gem_linear_p10n25yaw_2023_11_09_01_36_28_last.pth"
+  teacher_setup: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/setup_dinogem_oxford_2024_03_19_00_15_28.yml"
+  teacher_model: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/dinogem_oxford_2024_03_19_00_15_28_last.pth"
   ## ======================================
   teacher_desc_type: output
   arch: VoxelLocalFeatureExtractor
@@ -54,12 +54,15 @@ model:
     # middle_encoder_downsampling_other_dim: [False, False, False, False, False]
     middle_encoder_downsampling_other_dim: [False, True, False]
   proj_params: ## please give the normalized intrisics
+    w: 28
+    h: 28
     fx: 0.75377264
     fy: 1.00503019
     cx: 0.50295939
     cy: 0.50459166
     R: [[0, -1, 0], [0, 0, -1], [1, 0, 0]]
 dataset:
+  rebase_dir: null
   batch_size: 8
   num_workers: 8
   voxelization: True

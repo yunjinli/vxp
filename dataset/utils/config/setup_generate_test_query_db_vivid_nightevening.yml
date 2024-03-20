@@ -1,0 +1,13 @@
+general:
+  name: vivid_nightevening
+  annotation: /storage/group/dataset_mirrors/01_incoming/vividpp/driving_full/annotations_all.csv
+  # annotation: /storage/user/lyun/vivid/all_annotation.csv
+  save_dir: /storage/user/lyun/vivid
+  sequence:
+    - night
+    - evening
+parameter:
+  threshold: 25
+  yaw: True
+  num_samples: null
+  interval: 20

@@ -1,7 +1,8 @@
 general:
-  name: vivid_day12
-  annotation: /storage/group/dataset_mirrors/01_incoming/vividpp/driving_full/annotations_all.csv
-  save_dir: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs
+  name: new_vivid_day12
+  # annotation: /storage/group/dataset_mirrors/01_incoming/vividpp/driving_full/annotations_all.csv
+  annotation: /storage/user/lyun/vivid/all_annotation.csv
+  save_dir: /storage/user/lyun/vivid
   sequence:
     - day1
     - day2

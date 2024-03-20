@@ -78,5 +78,5 @@ if __name__ == "__main__":
     for date in date_list:
         p.run(date, args.force_write)
     
-    create_all_annotation(dir=os.path.join(setup['parameter']['save_dir'], 'submap'), save_dir=os.path.join(args.save_dir, 'all_annotation.csv'))
+    create_all_annotation(dir=os.path.join(setup['parameter']['save_dir'], 'submap'), save_dir=os.path.join(setup['parameter']['save_dir'], 'all_annotation.csv'))
     

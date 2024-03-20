@@ -1,19 +1,20 @@
 general:
-  name: vivid_campus_day12
-  # ## vxp
+  name: vivid_nightevening
+  ## vxp
   teacher_setup: /storage/user/lyun/vivid/models/setup_teacher_vivid_2023_11_20_21_35_31.yml
   teacher_model: /storage/user/lyun/vivid/models/teacher_vivid_2023_11_20_21_35_31_v.pth
   student_setup: /storage/user/lyun/vivid/models/setup_vxp_vivid_jim_coors_2023_11_22_11_34_37.yml
   student_model: /storage/user/lyun/vivid/models/vxp_vivid_jim_coors_2023_11_22_11_34_37.pth
-  query: /storage/user/lyun/vivid/new_vivid_campus_day12_evaluation_query_th25m_yaw_2runs_everyNonem.pickle
-  db: /storage/user/lyun/vivid/new_vivid_campus_day12_evaluation_database_th25m_yaw_2runs_everyNonem.pickle
-  k: 25
+
+  query: /storage/user/lyun/vivid/vivid_nightevening_evaluation_query_th25m_yaw_2runs_every20m.pickle
+  db: /storage/user/lyun/vivid/vivid_nightevening_evaluation_database_th25m_yaw_2runs_every20m.pickle
+  k: 10
   disp_img_tb: False
   cross_normalize: False
-  save_dir: /storage/user/lyun/vivid
+  save_dir: "/storage/user/lyun/vivid"
   num_workers: 4
   batch_size: 16
   rebase_dir: null
   sequence:
-    - campus_day1
-    - campus_day2
+    - night
+    - evening
