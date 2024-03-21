@@ -46,7 +46,14 @@ After parsing each sequence, the processed data would be saved in the save_dir w
 
 ### ViViD++ dataset
 
-Please follow their [documentation](https://visibilitydataset.github.io/1_about.html) to extract point clouds and images, and organize (image, point cloud) pair in annotation.csv as suggested above.
+Please follow their [documentation](https://visibilitydataset.github.io/1_about.html) to extract point clouds and images, and organize (image, point cloud) pair in annotation.csv as suggested above. We also provide our adapt version of the original code.
+
+```
+cd cd dataset/utils
+python process_rosbag_vxp.py --data /path/to/raw/vividpp/dataset --seq <name_of_the_sequence> --output /path/to/savedir ## Please run this for all the .bag file
+## Once all the needed .bag files are parsed
+python generate_annotations_vividpp.py --datapath /path/to/vivid/seq/savedir ## Please run this for all the saved sequences
+```
 
 ### KITTI dataset
 
