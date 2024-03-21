@@ -8,8 +8,8 @@ general:
   ## ======================================
 model:
   ## ====== Modify only this section ======
-  teacher_setup: /storage/user/lyun/vivid/models/setup_teacher_vivid_2023_11_20_21_35_31.yml
-  teacher_model: /storage/user/lyun/vivid/models/teacher_vivid_2023_11_20_21_35_31_v.pth
+  teacher_setup: /storage/user/lyun/vivid/models/setup_dinogem_vivid_2024_03_21_23_06_40.yml
+  teacher_model: /storage/user/lyun/vivid/models/dinogem_vivid_2024_03_21_23_06_40_last.pth
   ## ======================================
   teacher_desc_type: output
   arch: VoxelLocalFeatureExtractor

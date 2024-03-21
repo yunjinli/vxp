@@ -285,6 +285,8 @@ if __name__ == "__main__":
             db_path = setup['general']['db']
             logger.info(f"Using {device}")
             setup_student = load_setup_file(setup['general']['student_setup'])
+            setup['general']['teacher_setup'] = setup_student['model']['teacher_setup']
+            setup['general']['teacher_model'] = setup_student['model']['teacher_model']
             setup_teacher = load_setup_file(setup['general']['teacher_setup'])
 
             transforms_img = load_data_augmentation(

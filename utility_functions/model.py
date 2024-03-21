@@ -111,8 +111,8 @@ def model_factory_v2(model_collection, model_setup: dict) -> torch.nn.Module:
             model_collection, model_setup['backbone']['arch'])
         backbone = backbone_arch(**model_setup['backbone']['parameters'])
         ## For one freeze DINO experiment
-        for param in backbone.parameters():
-            param.requires_grad = False
+        # for param in backbone.parameters():
+        #     param.requires_grad = False
         model_dict['backbone'] = backbone
     
     pooling_arch = getattr(model_collection, model_setup['pooling']['arch'])

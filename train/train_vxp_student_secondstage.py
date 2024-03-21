@@ -105,19 +105,56 @@ if __name__ == "__main__":
 
     logger.info(f"Using {device}")
 
+    setup_voxel_feat_ext = load_setup_file(
+        setup['model']['student_pretrained_setup'])
+    
+    voxel_feat_ext = model_factory(
+        model_collection=model, model_setup=setup_voxel_feat_ext['model'])
+    voxel_feat_ext = load_pretrained_weight(
+        voxel_feat_ext, setup['model']['student_pretrained_model'], device)
+
+    downsampling_factor = 110 / 28
+    voxel_size_2x = [voxel_size[0] * downsampling_factor,
+                     voxel_size[1] * downsampling_factor,
+                     voxel_size[2] * downsampling_factor]
+    # width = 28
+    # height = 28
+    setup['model']['parameters'].update(
+        setup_voxel_feat_ext['model']['parameters'])
+    setup['model']['parameters']['fx'] = setup_voxel_feat_ext['model']['proj_params']['fx']
+    setup['model']['parameters']['fy'] = setup_voxel_feat_ext['model']['proj_params']['fy']
+    setup['model']['parameters']['cx'] = setup_voxel_feat_ext['model']['proj_params']['cx']
+    setup['model']['parameters']['cy'] = setup_voxel_feat_ext['model']['proj_params']['cy']
+    setup['model']['parameters']['height'] = setup_voxel_feat_ext['model']['proj_params']['h']
+    setup['model']['parameters']['width'] = setup_voxel_feat_ext['model']['proj_params']['w']
+    setup['model']['parameters']['R'] = setup_voxel_feat_ext['model']['proj_params']['R']
+
+    setup['model']['parameters']['up_voxel_size'] = voxel_size_2x
+    setup['model']['parameters']['v2i_pcd_range'] = setup_voxel_feat_ext['model']['parameters']['pcd_range']
+    setup['model']['parameters']['device'] = f"{device}"
+
+    student = model_factory(model_collection=model, model_setup=setup['model'])
+
+    if setup['model']['load_pretrained']:
+        logger.info("Loading pretrained weight from the student network")
+        student.voxel_feat_ext = voxel_feat_ext
+
+    student = student.to(device)
+    
+    setup['model']['teacher_setup'] = setup_voxel_feat_ext['model']['teacher_setup']
+    setup['model']['teacher_model'] = setup_voxel_feat_ext['model']['teacher_model']
+    
     setup_teacher = load_setup_file(setup['model']['teacher_setup'])
 
     transforms_img = load_data_augmentation(
         setup_teacher['dataset']['preprocessing'])
     transforms_img = torchvision.transforms.Compose(transforms_img)
-
+    
     teacher = model_factory_v2(model, setup_teacher['model'])
     teacher = load_pretrained_weight(
         teacher, setup['model']['teacher_model'], device)
     teacher = teacher.to(device)
     teacher.eval()
-    # img_extractor = ViTExtractor(
-    #     model=teacher.backbone.encoder, stride=8, device=device)
 
     transforms_pcd = load_data_augmentation(
         data_augmentations=setup['dataset']['pcd_preprocessing'], custom_data_augmentation_modules=dataset.preprocessing)
@@ -170,40 +207,7 @@ if __name__ == "__main__":
     val_dataloader = DataLoader(val_dataset, batch_size=setup['dataset']['batch_size'], shuffle=False, num_workers=setup['dataset']
                                 ['num_workers'], collate_fn=make_collate_fn(val_dataset), pin_memory=True, drop_last=True)
 
-    setup_voxel_feat_ext = load_setup_file(
-        setup['model']['student_pretrained_setup'])
-    voxel_feat_ext = model_factory(
-        model_collection=model, model_setup=setup_voxel_feat_ext['model'])
-    voxel_feat_ext = load_pretrained_weight(
-        voxel_feat_ext, setup['model']['student_pretrained_model'], device)
-
-    downsampling_factor = 110 / 28
-    voxel_size_2x = [voxel_size[0] * downsampling_factor,
-                     voxel_size[1] * downsampling_factor,
-                     voxel_size[2] * downsampling_factor]
-    # width = 28
-    # height = 28
-    setup['model']['parameters'].update(
-        setup_voxel_feat_ext['model']['parameters'])
-    setup['model']['parameters']['fx'] = setup_voxel_feat_ext['model']['proj_params']['fx']
-    setup['model']['parameters']['fy'] = setup_voxel_feat_ext['model']['proj_params']['fy']
-    setup['model']['parameters']['cx'] = setup_voxel_feat_ext['model']['proj_params']['cx']
-    setup['model']['parameters']['cy'] = setup_voxel_feat_ext['model']['proj_params']['cy']
-    setup['model']['parameters']['height'] = setup_voxel_feat_ext['model']['proj_params']['h']
-    setup['model']['parameters']['width'] = setup_voxel_feat_ext['model']['proj_params']['w']
-    setup['model']['parameters']['R'] = setup_voxel_feat_ext['model']['proj_params']['R']
-
-    setup['model']['parameters']['up_voxel_size'] = voxel_size_2x
-    setup['model']['parameters']['v2i_pcd_range'] = setup_voxel_feat_ext['model']['parameters']['pcd_range']
-    setup['model']['parameters']['device'] = f"{device}"
-
-    student = model_factory(model_collection=model, model_setup=setup['model'])
-
-    if setup['model']['load_pretrained']:
-        logger.info("Loading pretrained weight from the student network")
-        student.voxel_feat_ext = voxel_feat_ext
-
-    student = student.to(device)
+    
     logger.info(student.proj)
     loss_class = getattr(torch.nn, setup['loss']['fn'])
     loss = loss_class(**setup['loss']['parameters'])

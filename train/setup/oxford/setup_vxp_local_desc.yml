@@ -8,8 +8,8 @@ general:
   ## ======================================
 model:
   ## ====== Modify only this section ======
-  teacher_setup: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/setup_dinogem_oxford_2024_03_19_00_15_28.yml"
-  teacher_model: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/dinogem_oxford_2024_03_19_00_15_28_last.pth"
+  teacher_setup: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/setup_dinogem_oxford_2024_03_21_22_38_48.yml"
+  teacher_model: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/dinogem_oxford_2024_03_21_22_38_48_last.pth"
   ## ======================================
   teacher_desc_type: output
   arch: VoxelLocalFeatureExtractor

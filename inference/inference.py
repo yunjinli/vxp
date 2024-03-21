@@ -176,14 +176,12 @@ def get_recall(database_output, queries_output, gt, writer=None, mode='2D-2D', d
 
     for i in range(len(queries_output)):
         true_neighbors = gt[i]
-        # logger.debug(f"GT for frame {i}: {true_neighbors}")
         if (len(true_neighbors) == 0):
             logger.warning("No re-visit for this query")
             continue
         num_evaluated += 1
         distances, indices = database_nbrs.query(
             np.array([queries_output[i]]), k=num_neighbors)
-        # print(indices.shape)
         for j in range(len(indices[0])):
             if indices[0][j] in true_neighbors:
                 if (j == 0):
@@ -428,6 +426,8 @@ if __name__ == "__main__":
             db_path = setup['general']['db']
             logger.info(f"Using {device}")
             setup_student = load_setup_file(setup['general']['student_setup'])
+            setup['general']['teacher_setup'] = setup_student['model']['teacher_setup']
+            setup['general']['teacher_model'] = setup_student['model']['teacher_model']
             setup_teacher = load_setup_file(setup['general']['teacher_setup'])
 
             transforms_img = load_data_augmentation(

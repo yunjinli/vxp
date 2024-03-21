@@ -8,8 +8,6 @@ general:
   ## ======================================
 model:
   ## ====== Modify only this section ======
-  teacher_setup: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/setup_dinogem_oxford_2024_03_19_00_15_28.yml"
-  teacher_model: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/dinogem_oxford_2024_03_19_00_15_28_last.pth"
   load_pretrained: True
   student_pretrained_setup: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/setup_vxpext_oxford_2024_03_19_17_12_27.yml"
   student_pretrained_model: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/vxpext_oxford_2024_03_19_17_12_27.pth"

@@ -30,8 +30,7 @@ dataset:
   use_undistorted: True
   ram_limit: 180
   batch_size: 16
-  batch_size_limit: 128
-  # batch_size_limit: 80
+  batch_size_limit: 80
   batch_expansion_rate: 1.2
   batch_expansion_th: 0.8
   num_workers: 8

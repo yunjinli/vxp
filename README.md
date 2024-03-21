@@ -19,9 +19,9 @@ git clone https://github.com/yunjinli/vxp.git
 cd vxp
 conda create -n VXP python=3.10 -y
 conda activate VXP
-pip install torch torchvision numpy pandas tqdm tensorboard psutil scikit-learn bitarray pytorch-metric-learning==0.9.94 torchinfo
+pip install torch==2.0.1 torchvision==0.15.2 numpy pandas tqdm tensorboard psutil scikit-learn==1.2.2 bitarray pytorch-metric-learning==0.9.94 torchinfo
 pip install -U openmim
-mim install mmengine 'mmcv>=2.0.0rc4' 'mmdet>=3.0.0' 'mmdet3d>=1.1.0'
+mim install mmengine==0.7.3 mmcv==2.0.0 mmdet==3.0.0 mmdet3d==1.1.0
 pip install 'git+https://github.com/facebookresearch/detectron2.git'
 ```
 

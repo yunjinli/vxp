@@ -8,11 +8,9 @@ general:
   ## ======================================
 model:
   ## ====== Modify only this section ======
-  teacher_setup: /storage/user/lyun/kitti/models/setup_teacher_kitti_vgggem_newval_2024_01_08_16_48_11.yml
-  teacher_model: /storage/user/lyun/kitti/models/teacher_kitti_vgggem_newval_2024_01_08_16_48_11_last.pth
   load_pretrained: True
-  student_pretrained_setup: /storage/user/lyun/kitti/models/setup_vxp_local_kitti_newval_w_dino_2024_01_09_01_29_18.yml
-  student_pretrained_model: /storage/user/lyun/kitti/models/vxp_local_kitti_newval_w_dino_2024_01_09_01_29_18.pth
+  student_pretrained_setup: /storage/user/lyun/kitti/models/setup_vxpext_kitti_2024_03_21_14_16_45.yml
+  student_pretrained_model: /storage/user/lyun/kitti/models/vxpext_kitti_2024_03_21_14_16_45.pth
   ## ======================================
   arch: VXIGeM
   parameters:
@@ -82,7 +80,7 @@ optimizer:
   parameters:
     lr: 0.0001
     weight_decay: 1.0e-06
-  epochs: 50
+  epochs: 30
   min_lr: 5.0e-06
 
 scheduler:
