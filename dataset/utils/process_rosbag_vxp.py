@@ -1,3 +1,23 @@
+#
+# Created on Fri Mar 22 2024
+# The MIT License (MIT)
+# Copyright (c) 2024 Mariia Gladkova, Technical University of Munich
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+# and associated documentation files (the "Software"), to deal in the Software without restriction,
+# including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+# subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies or substantial
+# portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+# TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+# THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#
+
 # Adopted from the authors of ViViD++ dataset https://visibilitydataset.github.io/4_download.html
 
 import rosbag
@@ -13,7 +33,8 @@ from PIL import Image
 from pyproj import Proj, transform
 import pymap3d as pm
 import argparse
-
+import logging
+from tqdm import tqdm
 ## global variables
 imgno = 0
 lidarno = 0
@@ -23,6 +44,13 @@ cvbdg = CvBridge()
 proj_UTMK = Proj(init='epsg:5178')
 proj_WGS84 = Proj(init='epsg:4326')
 initpt = np.array([988118.672713562, 1818806.4875518726]) ## origin of campus, just for convenience.
+
+logger = logging.getLogger(__name__)
+ch = logging.StreamHandler()
+ch.setLevel(logging.INFO)
+formatter = logging.Formatter('[%(levelname)s] [%(name)s] %(asctime)s: %(message)s')
+ch.setFormatter(formatter)
+logger.addHandler(ch)
 
 def write_gps(msg, f_gps):
     global proj_UTMK, proj_WGS84
@@ -72,25 +100,25 @@ def main(input_dir, seqname, folder):
     os.makedirs(folder, exist_ok=True)
     f_gps = open(os.path.join(folder,'gpslist_enu.txt'),'w')
     ## write images with timestamp assignment
-    for _, msg, _ in bag.read_messages(topics=['/gps']):
+    for _, msg, _ in tqdm(bag.read_messages(topics=['/gps'])):
         write_gps(msg, f_gps)
     f_gps.close()
 
     img_folder = os.path.join(folder, "images")
     os.makedirs(img_folder, exist_ok=True)
     f = open(os.path.join(folder,'imglist.txt'),'w')
-    for _, msg, _ in bag.read_messages(topics=['/camera/image_color']):
+    for _, msg, _ in tqdm(bag.read_messages(topics=['/camera/image_color'])):
         write_images(msg, img_folder, f)
     f.close()
 
     lidar_folder = os.path.join(folder, "lidar")
     os.makedirs(lidar_folder, exist_ok=True)
     f_lidar = open(os.path.join(folder,'lidarlist.txt'),'w')
-    for _, msg, _ in bag.read_messages(topics=['/os1_cloud_node/points']):
+    for _, msg, _ in tqdm(bag.read_messages(topics=['/os1_cloud_node/points'])):
         write_ptcld(msg, lidar_folder, f_lidar)
     f_lidar.close()
 
-    print('saved '+ str(imgno) + ' images timstamps to detections.')
+    logger.info('saved '+ str(imgno) + ' images timstamps to detections.')
 
     bag.close()
 

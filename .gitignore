@@ -7,3 +7,4 @@ inference/*.png
 inference/inference_3d3d_video.py
 inference/inference_output_top_5_video.py
 dataset/utils/generate_dataset_vivid_not_work.py
+environment_ros.yaml

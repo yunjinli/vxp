@@ -111,10 +111,10 @@ dataset:
     #   parameters: { degrees: [-5, 5], translate: [0.1, 0.1] }
 loss:
   fn: SmoothL1Loss ## MSELoss
-  # parameters: { reduction: "none" }
-  # inv_depth_weighted_loss: True
-  parameters: { reduction: "mean" }
-  inv_depth_weighted_loss: False
+  parameters: { reduction: "none" }
+  inv_depth_weighted_loss: True
+  # parameters: { reduction: "mean" }
+  # inv_depth_weighted_loss: False
 
 optimizer:
   fn: Adam

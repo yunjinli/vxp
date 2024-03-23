@@ -50,9 +50,7 @@ Please follow their [documentation](https://visibilitydataset.github.io/1_about.
 
 ```
 cd cd dataset/utils
-python process_rosbag_vxp.py --data /path/to/raw/vividpp/dataset --seq <name_of_the_sequence> --output /path/to/savedir ## Please run this for all the .bag file
-## Once all the needed .bag files are parsed
-python generate_annotations_vividpp.py --datapath /path/to/vivid/seq/savedir ## Please run this for all the saved sequences
+python generate_dataset_vividpp.py --dataset_root <PATH_TO_VIVID++_DRIVING_FULL> --sequences city_day1 city_day2 campus_day1 campus_day2 city_night campus_night campus_evening city_evening  --save_dir <PATH_TO_SAVE_DIR>
 ```
 
 ### KITTI dataset

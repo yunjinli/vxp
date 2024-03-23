@@ -9,8 +9,8 @@ general:
 model:
   ## ====== Modify only this section ======
   load_pretrained: True
-  student_pretrained_setup: /storage/user/lyun/vivid/models/setup_vxpext_vivid_2024_03_21_14_17_30.yml
-  student_pretrained_model: /storage/user/lyun/vivid/models/vxpext_vivid_2024_03_21_14_17_30.pth
+  student_pretrained_setup: /storage/user/lyun/vivid/models/setup_vxpext_vivid_2024_03_22_16_08_21.yml
+  student_pretrained_model: /storage/user/lyun/vivid/models/vxpext_vivid_2024_03_22_16_08_21.pth
   ## ======================================
   arch: VXIGeM
   parameters:
@@ -79,8 +79,8 @@ dataset:
   img_data_augmentation:
     ColorJitter:
       parameters: { brightness: 0.1, contrast: 0.1, saturation: 0.1, hue: 0.1 }
-    RandomAffine:
-      parameters: { degrees: [-5, 5], translate: [0.1, 0.1] }
+    # RandomAffine:
+    #   parameters: { degrees: [-5, 5], translate: [0.1, 0.1] }
 loss:
   fn: SmoothL1Loss ## MSELoss
   parameters: { reduction: "mean" }

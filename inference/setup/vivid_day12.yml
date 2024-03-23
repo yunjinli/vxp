@@ -3,12 +3,12 @@ general:
   student_setup: /storage/user/lyun/vivid/models/setup_vxp_vivid_jim_coors_2023_11_22_11_34_37.yml
   student_model: /storage/user/lyun/vivid/models/vxp_vivid_jim_coors_2023_11_22_11_34_37.pth
 
-  query: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/vivid_day12_evaluation_query_th25m_yaw_2runs_every5m.pickle"
-  db: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/vivid_day12_evaluation_database_th25m_yaw_2runs_every5m.pickle"
-  k: 100
+  query: /storage/user/lyun/vivid/new_vivid_day12_evaluation_query_th25m_yaw_2runs_every20m.pickle
+  db: /storage/user/lyun/vivid/new_vivid_day12_evaluation_database_th25m_yaw_2runs_every20m.pickle
+  k: 10
   disp_img_tb: False
   cross_normalize: False
-  save_dir: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs"
+  save_dir: /storage/user/lyun/vivid
   num_workers: 4
   batch_size: 16
   rebase_dir: null
