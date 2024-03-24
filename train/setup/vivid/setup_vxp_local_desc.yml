@@ -4,7 +4,7 @@ general:
   val_pickle_dir: /storage/user/lyun/vivid/vxp_vivid_testing_pair_3d_student_p10_n25.pickle ## Testing row ID in annotation.csv, note that this is not the picke you train the teacher network
   annotation_dir: /storage/group/dataset_mirrors/01_incoming/vividpp/driving_full/annotations_all.csv ## Location of the annotation.csv
   save_dir: /storage/user/lyun/vivid/ ## Location to save the model and log
-  name: vxpext_vivid ## name of the model
+  name: vxp_vpenc_vivid ## name of the model
   ## ======================================
 model:
   ## ====== Modify only this section ======

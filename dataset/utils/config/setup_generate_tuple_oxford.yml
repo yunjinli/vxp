@@ -1,12 +1,12 @@
 parameter:
-  name: oxford_test
+  name: oxford_cattaneo
   annotation: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/all_annotation.csv"
   save_dir: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/"
   removed_sequences: []
   x_width: 150
   y_width: 150
   pos_th: 10
-  neg_th: 25
+  neg_th: 50 ## 25
   yaw: True
   p1: [5735712.768124, 620084.402381]
   p2: [5735611.299219, 620540.270327]

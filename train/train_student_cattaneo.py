@@ -45,9 +45,9 @@ from torch.nn.functional import normalize
 spconv.constants.SPCONV_ALLOW_TF32 = True
 
 process = psutil.Process()
-
 random.seed(0)
 torch.manual_seed(0)
+np.random.seed(0)
 
 logger = logging.getLogger(__name__)
 # logger.setLevel(logging.INFO)

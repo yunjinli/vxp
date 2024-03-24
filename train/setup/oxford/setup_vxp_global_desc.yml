@@ -4,13 +4,13 @@ general:
   val_pickle_dir: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/full_testing_pair_3d_student_p10_n50.pickle"
   annotation_dir: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/all_annotation.csv"
   save_dir: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/"
-  name: vxp_oxford
+  name: vxp_pcnetwork_oxford
   ## ======================================
 model:
   ## ====== Modify only this section ======
   load_pretrained: True
-  student_pretrained_setup: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/setup_vxpext_oxford_2024_03_19_17_12_27.yml"
-  student_pretrained_model: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/vxpext_oxford_2024_03_19_17_12_27.pth"
+  student_pretrained_setup: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/setup_vxpext_oxford_2024_03_22_19_03_06.yml"
+  student_pretrained_model: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/vxpext_oxford_2024_03_22_19_03_06.pth"
   ## ======================================
   arch: VXIGeM
   parameters:

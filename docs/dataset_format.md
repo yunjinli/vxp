@@ -49,7 +49,7 @@ After parsing each sequence, the processed data would be saved in the save_dir w
 Please follow their [documentation](https://visibilitydataset.github.io/1_about.html) to extract point clouds and images, and organize (image, point cloud) pair in annotation.csv as suggested above. We also provide our adapt version of the original code.
 
 ```
-cd cd dataset/utils
+cd dataset/utils
 python generate_dataset_vividpp.py --dataset_root <PATH_TO_VIVID++_DRIVING_FULL> --sequences city_day1 city_day2 campus_day1 campus_day2 city_night campus_night campus_evening city_evening  --save_dir <PATH_TO_SAVE_DIR>
 ```
 

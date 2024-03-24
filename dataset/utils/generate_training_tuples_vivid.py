@@ -111,9 +111,6 @@ if __name__ == "__main__":
         description='Generate training / test tuples')
     parser.add_argument('--config', type=str,
                         default="config/setup_generate_tuple_vivid.yml")
-    parser.add_argument('--mode', type=str, default='bruto-force',
-                        help='Mode', choices=['bruto-force', 'label'])
-    
     args = parser.parse_args()
 
     setup = load_setup_file(args.config)
@@ -163,8 +160,7 @@ if __name__ == "__main__":
         tuple_name = setup['parameter']['name'] + '_'
     else:
         tuple_name = ''
-    if args.mode.lower() == 'bruto-force':
-        construct_query_dict(df_train, os.path.join(
-            setup['parameter']['save_dir'], f"{tuple_name}training_queries_baseline_p{pos_th}_n{neg_th}{yaw}.pickle"), pos_th, neg_th, yaw=setup['parameter']['yaw'])
-        construct_query_dict(df_test, os.path.join(
-            setup['parameter']['save_dir'], f"{tuple_name}test_queries_baseline_p{pos_th}_n{neg_th}{yaw}.pickle"), pos_th, neg_th, yaw=setup['parameter']['yaw'])
+    construct_query_dict(df_train, os.path.join(
+        setup['parameter']['save_dir'], f"{tuple_name}training_queries_baseline_p{pos_th}_n{neg_th}{yaw}.pickle"), pos_th, neg_th, yaw=setup['parameter']['yaw'])
+    construct_query_dict(df_test, os.path.join(
+        setup['parameter']['save_dir'], f"{tuple_name}test_queries_baseline_p{pos_th}_n{neg_th}{yaw}.pickle"), pos_th, neg_th, yaw=setup['parameter']['yaw'])

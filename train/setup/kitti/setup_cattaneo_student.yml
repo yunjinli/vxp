@@ -1,15 +1,15 @@
 general:
   ## ====== Modify only this section ======
-  train_pickle_dir: /storage/user/lyun/kitti/vxp_kitti_newval_training_pair_3d_student_p10_n25_yaw.pickle
-  val_pickle_dir: /storage/user/lyun/kitti/vxp_kitti_newval_testing_pair_3d_student_p10_n25_yaw.pickle
+  train_pickle_dir: /storage/user/lyun/kitti/kitti_cattaneo_training_pair_3d_student_p10_n50_yaw.pickle
+  val_pickle_dir: /storage/user/lyun/kitti/kitti_cattaneo_testing_pair_3d_student_p10_n50_yaw.pickle
   annotation_dir: /storage/user/lyun/kitti/all_annotation.csv
   save_dir: /storage/user/lyun/kitti
   name: cattaneo_student_kitti
   ## ======================================
 model:
   ## ====== Modify only this section ======
-  teacher_setup: /storage/user/lyun/kitti/models/setup_teacher_kitti_cattaneo_newval_2024_01_11_10_42_54.yml
-  teacher_model: /storage/user/lyun/kitti/models/teacher_kitti_cattaneo_newval_2024_01_11_10_42_54_last.pth
+  teacher_setup: /storage/user/lyun/kitti/models/setup_cattaneo_teacher_kitti_2024_03_23_22_24_53.yml
+  teacher_model: /storage/user/lyun/kitti/models/cattaneo_teacher_kitti_2024_03_23_22_24_53_v.pth
   ## ======================================
   normalize: False
   arch: SecondAsppNetvladV2

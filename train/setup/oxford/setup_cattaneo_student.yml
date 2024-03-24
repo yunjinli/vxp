@@ -1,15 +1,15 @@
 general:
   ## ====== Modify only this section ======
-  train_pickle_dir: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/full_training_pair_3d_student_p10_n50.pickle"
-  val_pickle_dir: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/full_testing_pair_3d_student_p10_n50.pickle"
+  train_pickle_dir: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/oxford_cattaneo_training_pair_3d_student_p10_n50_yaw.pickle"
+  val_pickle_dir: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/oxford_cattaneo_testing_pair_3d_student_p10_n50_yaw.pickle"
   annotation_dir: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/all_annotation.csv"
   save_dir: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/"
   name: cattaneo_student_oxford
   ## ======================================
 model:
   ## ====== Modify only this section ======
-  teacher_setup: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/setup_teacher2d_backbone2d_vgg_netvlad_linear_p10n25yaw_2023_11_12_13_30_30.yml
-  teacher_model: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/teacher2d_backbone2d_vgg_netvlad_linear_p10n25yaw_2023_11_12_13_30_30_last.pth
+  teacher_setup: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/setup_cattaneo_teacher_oxford_2024_03_23_20_41_12.yml
+  teacher_model: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/cattaneo_teacher_oxford_2024_03_23_20_41_12_v.pth
   ## ======================================
   normalize: False
   arch: SecondAsppNetvladV2

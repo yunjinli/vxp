@@ -9,5 +9,5 @@ general:
 parameter:
   threshold: 25
   yaw: True
-  num_samples: 1500
-  interval: null
+  num_samples: null
+  interval: 20
