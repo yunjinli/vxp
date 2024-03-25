@@ -1,15 +1,15 @@
 general:
   ## ====== Modify only this section ======
-  train_pickle_dir: /storage/user/lyun/vivid/vivid_cattaneo_training_pair_3d_student_p10_n50.pickle ## Training row ID in annotation.csv, note that this is not the picke you train the teacher network
-  val_pickle_dir: /storage/user/lyun/vivid/vivid_cattaneo_testing_pair_3d_student_p10_n50.pickle ## Testing row ID in annotation.csv, note that this is not the picke you train the teacher network
-  annotation_dir: /storage/user/lyun/vivid/all_annotation.csv ## Location of the annotation.csv
-  save_dir: /storage/user/lyun/vivid/ ## Location to save the model and log
+  train_pickle_dir: <path/to/{name}_training_pair_3d_student_p10_n25.pickle>
+  val_pickle_dir: <path/to/{name}_testing_pair_3d_student_p10_n25.pickle>
+  annotation_dir: <path/to/vivid/all_annotation.csv>
+  save_dir: <path/to/save_dir/vivid>
   name: cattaneo_student_vivid
   ## ======================================
 model:
   ## ====== Modify only this section ======
-  teacher_setup: /storage/user/lyun/vivid/models/setup_cattaneo_teacher_vivid_2024_03_23_20_46_07.yml
-  teacher_model: /storage/user/lyun/vivid/models/cattaneo_teacher_vivid_2024_03_23_20_46_07_v.pth
+  teacher_setup: <path/to/setup_cattaneo_teacher_vivid_YYYY_MM_DD_HH_mm_ss.yml>
+  teacher_model: <path/to/cattaneo_teacher_vivid_YYYY_MM_DD_HH_mm_ss.pth>
   ## ======================================
   normalize: False
   arch: SecondAsppNetvladV2
@@ -160,11 +160,9 @@ dataset:
       # parameters: {point_cloud_range: [0, -25, -5, 50, 25, 20], max_num_points: 35, voxel_size: [0.25, 0.25, 0.25], max_voxels: 10000} ## grid size 200 x 200 x 100
       parameters:
         {
-          # point_cloud_range: [0, -25, -25, 50, 25, 25],
-          point_cloud_range: [0, -25, -4, 50, 25, 21],
+          point_cloud_range: [0, -25, -25, 50, 25, 25],
           max_num_points: 35,
-          # voxel_size: [0.75, 0.75, 0.75],
-          voxel_size: [0.75, 0.75, 0.375],
+          voxel_size: [0.75, 0.75, 0.75],
           max_voxels: 10000,
         }
       # parameters: {point_cloud_range: [0, -20, -2.5, 50, 20, 15], max_num_points: 35, voxel_size: [0.75, 0.2, 0.0875], max_voxels: 10000} ## grid size 67 x 200 x 200

@@ -1,8 +1,8 @@
 parameter:
-  name: vivid_cattaneo
+  name: vivid_vxp
   # annotation: "/storage/group/dataset_mirrors/01_incoming/vividpp/driving_full/annotations_all.csv"
   annotation: /storage/user/lyun/vivid/all_annotation.csv
   save_dir: "/storage/user/lyun/vivid"
   pos_th: 10
-  neg_th: 50 ## vxp 25
+  neg_th: 25
   yaw: True

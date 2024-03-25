@@ -1,3 +1,5 @@
+## Code from https://github.com/alexjunholee/LC2_crossmatching/blob/main/lclc/models.py
+
 import numpy as np
 import torch
 import torchvision.models as models

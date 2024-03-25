@@ -1,7 +1,7 @@
 general:
   name: vivid_nightevening
-  student_setup: /storage/user/lyun/vivid/models/setup_vxp_vivid_jim_coors_2023_11_22_11_34_37.yml
-  student_model: /storage/user/lyun/vivid/models/vxp_vivid_jim_coors_2023_11_22_11_34_37.pth
+  student_setup: /usr/stud/lyun/vxp/assets/paper_weights/vivid/setup_vxp_pcnetwork_vivid_2023_11_22_11_34_37.yml
+  student_model: /usr/stud/lyun/vxp/assets/paper_weights/vivid/vxp_vxp_pcnetwork_vivid_2023_11_22_11_34_37.pth
 
   query: /storage/user/lyun/vivid/vivid_nightevening_evaluation_query_th25m_yaw_2runs_every20m.pickle
   db: /storage/user/lyun/vivid/vivid_nightevening_evaluation_database_th25m_yaw_2runs_every20m.pickle
