@@ -1,15 +1,15 @@
 general:
   ## ====== Modify only this section ======
-  train_pickle_dir: /storage/user/lyun/kitti/vxp_kitti_newval_training_pair_3d_student_p10_n25_yaw.pickle
-  val_pickle_dir: /storage/user/lyun/kitti/vxp_kitti_newval_testing_pair_3d_student_p10_n25_yaw.pickle
-  annotation_dir: /storage/user/lyun/kitti/all_annotation.csv
-  save_dir: /storage/user/lyun/kitti
+  train_pickle_dir: <path/to/{name}_training_pair_3d_student_p10_n25.pickle>
+  val_pickle_dir: <path/to/{name}_testing_pair_3d_student_p10_n25.pickle>
+  annotation_dir: <path/to/kitti/all_annotation.csv>
+  save_dir: <path/to/save_dir/kitti>
   name: cattaneo_student_kitti
   ## ======================================
 model:
   ## ====== Modify only this section ======
-  teacher_setup: /storage/user/lyun/kitti/models/setup_teacher_kitti_cattaneo_newval_2024_01_11_10_42_54.yml
-  teacher_model: /storage/user/lyun/kitti/models/teacher_kitti_cattaneo_newval_2024_01_11_10_42_54_last.pth
+  teacher_setup: <path/to/setup_cattaneo_teacher_kitti_YYYY_MM_DD_HH_mm_ss.yml>
+  teacher_model: <path/to/cattaneo_teacher_kitti_YYYY_MM_DD_HH_mm_ss.pth>
   ## ======================================
   normalize: False
   arch: SecondAsppNetvladV2
@@ -151,10 +151,8 @@ dataset:
       parameters:
         {
           point_cloud_range: [0, -25, -25, 50, 25, 25],
-          # point_cloud_range: [0, -25, -4, 50, 25, 21],
           max_num_points: 35,
-          # voxel_size: [0.75, 0.75, 0.75],
-          voxel_size: [0.75, 0.75, 0.375],
+          voxel_size: [0.75, 0.75, 0.75],
           max_voxels: 10000,
         }
       # parameters: {point_cloud_range: [0, -20, -2.5, 50, 20, 15], max_num_points: 35, voxel_size: [0.75, 0.2, 0.0875], max_voxels: 10000} ## grid size 67 x 200 x 200

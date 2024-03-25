@@ -50,35 +50,51 @@ logger.addHandler(ch)
 
 
 class Parser:
-    def __init__(self, setup=None):
-        self.base_dir = setup['parameter']['base_dir']
-        self.save_dir = setup['parameter']['save_dir']
-        self.max_depth = setup['parameter']['max_depth']
-        self.max_lateral = setup['parameter']['max_lateral']
-        self.max_vertical = setup['parameter']['max_vertical']
-        self.depth_at_least = setup['parameter']['depth_at_least']
-        self.every_x_meter = setup['parameter']['every_x_meter']
-        # self.plane_error_threshold = setup['parameter']['plane_error_threshold']
-        # self.ransac_threshold = setup['parameter']['ransac_threshold']
-        # self.ransac_iteration = setup['parameter']['ransac_iteration']
-        self.remove_ground = setup['parameter']['remove_ground']
-        self.ins_dir = setup['parameter']['ins_dir']
-        self.cam_central = setup['parameter']['cam_central']
-        self.lidar_base_dir = setup['parameter']['lidar_dir']
-        self.save_submap_with_ground = setup['parameter']['save_submap_with_ground']
-        self.write_to_annotation = setup['parameter']['write_to_annotation']
+    def __init__(self, 
+                 base_dir = "/storage/group/dataset_mirrors/01_incoming/Oxford_RobotCar/",
+                 ins_dir = None,
+                 save_dir = "/storage/user/lyun/Oxford_Robocar_test/",
+                 lidar_dir = None,
+                 cam_central = False,
+                 max_depth = 50.0, 
+                 max_lateral = 25.0,
+                 max_vertical = 25.0,
+                 depth_at_least = 30.0,
+                 every_x_meter = 5.0,
+                 plane_error_threshold = 0.1,
+                 ransac_threshold = 0.2,
+                 ransac_iteration = 1000,
+                 save_submap_with_ground = False,
+                 write_to_annotation = True,
+                 ):
+        self.base_dir = base_dir
+        self.save_dir = save_dir
+        self.max_depth = max_depth
+        self.max_lateral = max_lateral
+        self.max_vertical = max_vertical
+        self.depth_at_least = depth_at_least
+        self.every_x_meter = every_x_meter
+        self.plane_error_threshold = plane_error_threshold
+        self.ransac_threshold = ransac_threshold
+        self.ransac_iteration = ransac_iteration
+        # self.remove_ground = setup['parameter']['remove_ground']
+        self.ins_dir = ins_dir
+        self.cam_central = cam_central
+        self.lidar_base_dir = lidar_dir
+        self.save_submap_with_ground = save_submap_with_ground
+        self.write_to_annotation = write_to_annotation
 
         logger.info("Submap span from " +
                     "both x-direction of the camera" if self.cam_central else "positive x-direction of the camera")
         if not os.path.exists(self.save_dir):
             os.mkdir(self.save_dir)
 
-        with open(os.path.join(self.save_dir, 'setup.yml'), 'w') as outfile:
-            yaml.dump(setup, outfile, default_flow_style=False)
+        # with open(os.path.join(self.save_dir, 'setup.yml'), 'w') as outfile:
+        #     yaml.dump(setup, outfile, default_flow_style=False)
 
         logger.info(f"Base directory: {os.path.abspath(self.base_dir)}")
         self.extrinsics_dir = 'extrinsics'
-        rtk = 'rtk'
+        gps = 'gps'
         img = 'image'
         lidar = 'lms_front'
         self.img_save_dir = os.path.join(self.save_dir, img)
@@ -92,13 +108,13 @@ class Parser:
         if not os.path.exists(self.raw_submap_save_dir):
             os.mkdir(self.raw_submap_save_dir)
         if self.ins_dir is not None:
-            self.rtk_base_dir = self.ins_dir
+            self.gps_base_dir = self.ins_dir
         else:
-            self.rtk_base_dir = os.path.join(self.base_dir, rtk)
+            self.gps_base_dir = os.path.join(self.base_dir, gps)
 
-        if not os.path.exists(self.rtk_base_dir):
+        if not os.path.exists(self.gps_base_dir):
             logger.error(
-                F"Cannot find ground truth pose base with directory: {os.path.abspath(self.rtk_base_dir)}")
+                F"Cannot find ground truth pose base with directory: {os.path.abspath(self.gps_base_dir)}")
             raise RuntimeError()
 
         self.img_base_dir = os.path.join(self.base_dir, img)
@@ -163,20 +179,20 @@ class Parser:
                 except:
                     logger.warn(f"Cannot parser {dirname}")
 
-        if self.ins_dir is not None:
-            poses_file = os.path.join(self.rtk_base_dir, date, 'gps/ins.csv')
-        else:
-            poses_file = os.path.join(self.rtk_base_dir, date, 'rtk.csv')
+        # if self.ins_dir is not None:
+        poses_file = os.path.join(self.gps_base_dir, date, 'ins.csv')
+        # else:
+        #     poses_file = os.path.join(self.rtk_base_dir, date, 'rtk.csv')
 
         if not os.path.exists(poses_file):
             logger.error(
-                f"No available rtk file found in directory: {os.path.abspath(poses_file)}")
+                f"No available gps file found in directory: {os.path.abspath(poses_file)}")
             raise RuntimeError()
 
         try:
             # print((self.ins_dir is None))
             start_pose_abs, poses = interpolate_ins_poses(
-                poses_file, cam_timestamps, cam_timestamps[0], use_rtk=(self.ins_dir is None))
+                poses_file, cam_timestamps, cam_timestamps[0], use_rtk=False)
         except:
             logger.error(f"Error when parsing the sequence {date}")
             return
@@ -374,32 +390,32 @@ class Parser:
                     date_raw_submap_save_dir, str(timestamp) + '.npy')
                 np.save(save_path, raw_filtered)
 
-            if self.remove_ground is not None:
-                sub_filtered = np.copy(filtered)
+            # if self.remove_ground is not None:
+            sub_filtered = np.copy(filtered)
 
-                pcd = o3d.geometry.PointCloud()
-                pcd.points = o3d.utility.Vector3dVector(sub_filtered)
+            pcd = o3d.geometry.PointCloud()
+            pcd.points = o3d.utility.Vector3dVector(sub_filtered)
 
-                coeff, plane_indices = pcd.segment_plane(
-                    self.remove_ground['ransac_threshold'], 3, self.remove_ground['ransac_iteration'])
+            coeff, plane_indices = pcd.segment_plane(
+                self.ransac_threshold, 3, self.ransac_iteration)
 
-                if np.abs(np.sum(coeff[:3] * np.array([0, 0, 1]))) < (1 - self.remove_ground['plane_error_threshold']):
-                    # Not fit the ground
-                    logger.warning(
-                        "The fit gound is not correct, discard this sample")
-                    continue
-                else:
-                    logger.debug(
-                        f"Successfully remove {len(plane_indices)} point on the ground")
+            if np.abs(np.sum(coeff[:3] * np.array([0, 0, 1]))) < (1 - self.plane_error_threshold):
+                # Not fit the ground
+                logger.warning(
+                    "The fit gound is not correct, discard this sample")
+                continue
+            else:
+                logger.debug(
+                    f"Successfully remove {len(plane_indices)} point on the ground")
 
-                sub_filtered = np.delete(sub_filtered, plane_indices, axis=0)
+            sub_filtered = np.delete(sub_filtered, plane_indices, axis=0)
 
-                np.random.shuffle(sub_filtered)
+            np.random.shuffle(sub_filtered)
 
-                # ========== Save the PCD ========== #
-                save_path = os.path.join(
-                    date_submap_save_dir, str(timestamp) + '.npy')
-                np.save(save_path, sub_filtered)
+            # ========== Save the PCD ========== #
+            save_path = os.path.join(
+                date_submap_save_dir, str(timestamp) + '.npy')
+            np.save(save_path, sub_filtered)
             if self.write_to_annotation:
                 xyzrpy = se3_to_components(start_pose_abs * poses[i])
                 # euler = so3_to_euler(poses[i][:3, :3])

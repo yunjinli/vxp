@@ -1,6 +1,14 @@
 # VXP: Voxel-Cross-Pixel Large-scale Image-LiDAR Place Recognition
 
+## [Project page](https://yunjinli.github.io/projects-vxp/) | [Paper](https://arxiv.org/abs/2403.14594)
+
 We propose a novel Voxel-Cross-Pixel (VXP) approach, which establishes voxel and pixel correspondences in a self-supervised manner and brings them into a shared feature space. We achieve state-of-the-art performance in cross-modal retrieval on the Oxford RobotCar, ViViD++ datasets and KITTI benchmark, while maintaining high uni-modal global localization accuracy.
+
+|                                               |                                               |
+| --------------------------------------------- | --------------------------------------------- |
+| ![2d3d](/assets/day1_evening_video_2D-3D.gif) | ![3d2d](/assets/day1_evening_video_3D-2D.gif) |
+| ![2d2d](/assets/day1_evening_video_2D-2D.gif) | ![3d3d](/assets/day1_evening_video_3D-3D.gif) |
+
 ![teaser](assets/teaser_figure.jpg)
 ![pipeline](assets/pipeline.jpg)
 
@@ -11,9 +19,9 @@ git clone https://github.com/yunjinli/vxp.git
 cd vxp
 conda create -n VXP python=3.10 -y
 conda activate VXP
-pip install torch torchvision numpy pandas tqdm tensorboard psutil scikit-learn bitarray pytorch-metric-learning==0.9.94 torchinfo
+pip install torch==2.0.1 torchvision==0.15.2 numpy pandas tqdm tensorboard psutil scikit-learn==1.2.2 bitarray pytorch-metric-learning==0.9.94 torchinfo
 pip install -U openmim
-mim install mmengine 'mmcv>=2.0.0rc4' 'mmdet>=3.0.0' 'mmdet3d>=1.1.0'
+mim install mmengine==0.7.3 mmcv==2.0.0 mmdet==3.0.0 mmdet3d==1.1.0
 pip install 'git+https://github.com/facebookresearch/detectron2.git'
 ```
 

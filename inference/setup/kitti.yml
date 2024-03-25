@@ -1,9 +1,7 @@
 general:
   name: kitti_00
-  teacher_setup: /storage/user/lyun/kitti/models/setup_teacher_kitti_vgggem_newval_2024_01_08_16_48_11.yml
-  teacher_model: /storage/user/lyun/kitti/models/teacher_kitti_vgggem_newval_2024_01_08_16_48_11_last.pth
-  student_setup: /storage/user/lyun/kitti/models/setup_vxp_kitti_newval_w_dino_2024_01_09_16_57_28.yml
-  student_model: /storage/user/lyun/kitti/models/vxp_kitti_newval_w_dino_2024_01_09_16_57_28.pth
+  student_setup: /usr/stud/lyun/vxp/assets/paper_weights/kitti/setup_vxp_pcnetwork_kitti_2024_01_09_16_57_28.yml
+  student_model: /usr/stud/lyun/vxp/assets/paper_weights/kitti/vxp_pcnetwork_kitti_2024_01_09_16_57_28.pth
   query: /storage/user/lyun/kitti/kitti_00_test_region_evaluation_query_th20m_yaw_1runs.pickle
   db: /storage/user/lyun/kitti/kitti_00_test_region_evaluation_database_th20m_yaw_1runs.pickle
   k: 100

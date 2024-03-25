@@ -1,22 +1,23 @@
 general:
   ## ====== Modify only this section ======
-  train_pickle_dir: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/vxp_training_queries_baseline_p10_n25_yaw.pickle
-  val_pickle_dir: /storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/vxp_test_queries_baseline_p10_n25_yaw.pickle
-  save_dir: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/"
+  train_pickle_dir: <path/to/{name}_training_queries_baseline_p10_n25_yaw.pickle>
+  val_pickle_dir: <path/to/{name}_test_queries_baseline_p10_n25_yaw.pickle>
+  save_dir: <path/to/save_dir/oxford>
   name: cattaneo_teacher_oxford
   ## ======================================
 model:
+  pretrained: null
   backbone:
     arch: vgg16
   pooling:
-    arch: NetVLAD
+    arch: GeM
     parameters:
-      num_clusters: 64
-      dim: 512
-      normalize_input: True
-      vladv2: True
-      output_dim: 256
-      gating: False
+      p: 3
+      eps: 1.0e-06
+      normalize: false
+      dense_output_dim: !!python/tuple
+        - 512
+        - 256
 
   input_size: [1, 3, 240, 320]
 
@@ -24,7 +25,7 @@ dataset:
   use_undistorted: True
   ram_limit: 180
   batch_size: 16
-  batch_size_limit: 80
+  batch_size_limit: 256
   batch_expansion_rate: 1.4
   batch_expansion_th: 0.7
   num_workers: 8

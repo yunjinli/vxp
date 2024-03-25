@@ -1,9 +1,9 @@
 general:
   ## ====== Modify only this section ======
-  train_pickle_dir: /storage/user/lyun/kitti/vxp_kitti_newval_training_queries_baseline_p10_n25_yaw.pickle
-  val_pickle_dir: /storage/user/lyun/kitti/vxp_kitti_newval_test_queries_baseline_p10_n25_yaw.pickle
-  save_dir: /storage/user/lyun/kitti
-  name: dinogem_kitti
+  train_pickle_dir: <path/to/{name}_training_queries_baseline_p10_n25_yaw.pickle>
+  val_pickle_dir: <path/to/{name}_test_queries_baseline_p10_n25_yaw.pickle>
+  save_dir: <path/to/save_dir/kitti>
+  name: vxp_imgnetwork_kitti
   ## ======================================
 model:
   pretrained: null
@@ -30,8 +30,7 @@ dataset:
   use_undistorted: True
   ram_limit: 180
   batch_size: 16
-  batch_size_limit: 128
-  # batch_size_limit: 80
+  batch_size_limit: 80
   batch_expansion_rate: 1.2
   batch_expansion_th: 0.8
   num_workers: 8

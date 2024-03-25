@@ -1,18 +1,16 @@
 general:
   ## ====== Modify only this section ======
-  train_pickle_dir: /storage/user/lyun/kitti/vxp_kitti_newval_training_pair_3d_student_p10_n25_yaw.pickle
-  val_pickle_dir: /storage/user/lyun/kitti/vxp_kitti_newval_testing_pair_3d_student_p10_n25_yaw.pickle
-  annotation_dir: /storage/user/lyun/kitti/all_annotation.csv
-  save_dir: /storage/user/lyun/kitti
-  name: vxp_kitti
+  train_pickle_dir: <path/to/{name}_training_pair_3d_student_p10_n25.pickle>
+  val_pickle_dir: <path/to/{name}_testing_pair_3d_student_p10_n25.pickle>
+  annotation_dir: <path/to/kitti/all_annotation.csv>
+  save_dir: <path/to/save_dir/kitti>
+  name: vxp_pcnetwork_kitti
   ## ======================================
 model:
   ## ====== Modify only this section ======
-  teacher_setup: /storage/user/lyun/kitti/models/setup_teacher_kitti_vgggem_newval_2024_01_08_16_48_11.yml
-  teacher_model: /storage/user/lyun/kitti/models/teacher_kitti_vgggem_newval_2024_01_08_16_48_11_last.pth
   load_pretrained: True
-  student_pretrained_setup: /storage/user/lyun/kitti/models/setup_vxp_local_kitti_newval_w_dino_2024_01_09_01_29_18.yml
-  student_pretrained_model: /storage/user/lyun/kitti/models/vxp_local_kitti_newval_w_dino_2024_01_09_01_29_18.pth
+  student_pretrained_setup: <path/to/setup_vxp_vpenc_kitti_YYYY_MM_DD_HH_mm_ss.yml>
+  student_pretrained_model: <path/to/vxp_vpenc_kitti_YYYY_MM_DD_HH_mm_ss.pth>
   ## ======================================
   arch: VXIGeM
   parameters:

@@ -45,9 +45,9 @@ from torch.nn.functional import normalize
 spconv.constants.SPCONV_ALLOW_TF32 = True
 
 process = psutil.Process()
-
 random.seed(0)
 torch.manual_seed(0)
+np.random.seed(0)
 
 logger = logging.getLogger(__name__)
 # logger.setLevel(logging.INFO)
@@ -89,7 +89,7 @@ if __name__ == "__main__":
     voxel_size = setup['dataset']['pcd_preprocessing']['OnlineVoxelization']['parameters']['voxel_size']
     point_cloud_range = setup['dataset']['pcd_preprocessing']['OnlineVoxelization']['parameters']['point_cloud_range']
 
-    if setup['model']['arch'] == 'SecondAsppNetvlad' or setup['model']['arch'] == 'SecondAsppNetvladV2' or setup['model']['arch'] == 'VoxelLocalFeatureExtractor':
+    if setup['model']['arch'] == 'SecondAsppNetvlad' or setup['model']['arch'] == 'SecondAsppNetvladV2' or setup['model']['arch'] == 'VoxelLocalFeatureExtractor' or setup['model']['arch'] == 'SecondAsppGeM':
         setup['model']['parameters']['voxel_size'] = setup['dataset']['pcd_preprocessing']['OnlineVoxelization']['parameters']['voxel_size']
         setup['model']['parameters']['pcd_range'] = setup['dataset']['pcd_preprocessing']['OnlineVoxelization']['parameters']['point_cloud_range']
         grid_xyz = (np.asarray(

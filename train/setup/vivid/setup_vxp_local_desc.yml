@@ -1,15 +1,15 @@
 general:
   ## ====== Modify only this section ======
-  train_pickle_dir: /storage/user/lyun/vivid/vxp_vivid_training_pair_3d_student_p10_n25.pickle ## Training row ID in annotation.csv, note that this is not the picke you train the teacher network
-  val_pickle_dir: /storage/user/lyun/vivid/vxp_vivid_testing_pair_3d_student_p10_n25.pickle ## Testing row ID in annotation.csv, note that this is not the picke you train the teacher network
-  annotation_dir: /storage/group/dataset_mirrors/01_incoming/vividpp/driving_full/annotations_all.csv ## Location of the annotation.csv
-  save_dir: /storage/user/lyun/vivid/ ## Location to save the model and log
-  name: vxpext_vivid ## name of the model
+  train_pickle_dir: <path/to/{name}_training_pair_3d_student_p10_n25.pickle>
+  val_pickle_dir: <path/to/{name}_testing_pair_3d_student_p10_n25.pickle>
+  annotation_dir: <path/to/vivid/all_annotation.csv>
+  save_dir: <path/to/save_dir/vivid>
+  name: vxp_vpenc_vivid ## name of the model
   ## ======================================
 model:
   ## ====== Modify only this section ======
-  teacher_setup: /storage/user/lyun/vivid/models/setup_teacher_vivid_2023_11_20_21_35_31.yml
-  teacher_model: /storage/user/lyun/vivid/models/teacher_vivid_2023_11_20_21_35_31_v.pth
+  teacher_setup: <path/to/setup_vxp_imgnetwork_vivid_YYYY_MM_DD_HH_mm_ss.yml>
+  teacher_model: <path/to/vxp_imgnetwork_vivid_YYYY_MM_DD_HH_mm_ss.pth>
   ## ======================================
   teacher_desc_type: output
   arch: VoxelLocalFeatureExtractor
@@ -111,10 +111,10 @@ dataset:
     #   parameters: { degrees: [-5, 5], translate: [0.1, 0.1] }
 loss:
   fn: SmoothL1Loss ## MSELoss
-  # parameters: { reduction: "none" }
-  # inv_depth_weighted_loss: True
-  parameters: { reduction: "mean" }
-  inv_depth_weighted_loss: False
+  parameters: { reduction: "none" }
+  inv_depth_weighted_loss: True
+  # parameters: { reduction: "mean" }
+  # inv_depth_weighted_loss: False
 
 optimizer:
   fn: Adam

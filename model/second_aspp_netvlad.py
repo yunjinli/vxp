@@ -25,6 +25,7 @@ from mmdet3d.models.voxel_encoders.voxel_encoder import HardVFE
 from torch import nn
 import torch
 from .pooling.netvlad import NetVLAD
+from .pooling.GeM import GeM
 from detectron2.layers.aspp import ASPP
 from mmdet3d.models.backbones.second import SECOND
 from mmdet3d.models.middle_encoders.sparse_encoder import SparseEncoder
@@ -289,4 +290,113 @@ class SecondAsppNetvladV2(nn.Module):
         middle_output = self.middle(vfe_output, coors, int(batch_size))
         aspp_output = self.aspp(middle_output)
         output = self.netvlad(aspp_output)
+        return output
+
+class SecondAsppGeM(nn.Module):
+    """ SECOND + ASPP + GeM
+    """
+
+    def __init__(self,
+                 vfe_feat_channels=[32, 128],
+                 voxel_size=(0.2, 0.2, 1),
+                 pcd_range=(0, -25, -25, 50, 25, 25),
+                 grid_zyx=[50, 250, 250],
+                 middle_spconv_in_channels=128,
+                 middle_spconv_out_channels=64,
+                 middle_base_channels=16,
+                 middle_encoder_channels=(
+                     (16, ), (32, 32, 32), (64, 64, 64), (64, 64, 64)),
+                 middle_encoder_paddings=(
+                     (1, ), (1, 1, 1), (1, 1, 1), ((0, 1, 1), 1, 1)),
+                 middle_downsample_dimension='z',
+                 middle_encoder_downsampling_other_dim=[
+                     False, False, False, False],
+                 aspp_in_channels=192,
+                 aspp_out_channels=512,
+                 aspp_rate=[6, 12, 18],
+                 aspp_norm='BN',
+                 aspp_dropout=0.1,
+                 use_depthwise_separable_conv=False,
+                 p: float = 3, eps: float = 1e-6, normalize: bool = True, dense_output_dim: Tuple[int] = None,):
+        """Construtor
+
+        Args:
+            vfe_feat_channels (list, optional): VFE channels. Defaults to [32, 128].
+            voxel_size (tuple, optional): Voxel size. Defaults to (0.2, 0.2, 1).
+            pcd_range (tuple, optional): Point cloud range [xmin, ymin, zmin, xmax, ymax, zmax]. Defaults to (0, -25, -25, 50, 25, 25).
+            grid_zyx (list, optional): Grid dimension (z, y, x). Defaults to [50, 250, 250].
+            middle_spconv_in_channels (int, optional): Input channel dimenstion to the middle sparse feature extractor. Defaults to 128.
+            middle_spconv_out_channels (int, optional): Ouput channel dimenstion to the middle sparse feature extractor. Defaults to 64.
+            middle_base_channels (int, optional): Out channels for conv_input layer. Defaults to 16.
+            middle_encoder_channels (TwoTupleIntType, optional): Convolutional channels of each encode block. 
+                Defaults to ((16, ), (32, 32, 32), (64, 64, 64), (64, 64, 64)).
+            middle_encoder_paddings (TwoTupleIntType, optional): Paddings of each encode block. 
+                Defaults to ((1, ), (1, 1, 1), (1, 1, 1), ((0, 1, 1), 1, 1)).
+            middle_downsample_dimension (str, optional): Downsampling dimension.
+                z: Bird's eys view (From the top)
+                x: Front view
+                y: Side view
+                Defaults to 'z'.
+            aspp_in_channels (int, optional): ASPP input channel size. Defaults to 192.
+            aspp_out_channels (int, optional): ASPP output channel size. Defaults to 512.
+            aspp_rate (list, optional): ASPP dilation rates. Defaults to [6, 12, 18].
+            aspp_norm (str, optional): ASPP normalization function. Defaults to 'BN'.
+            aspp_dropout (float, optional): ASPP dropout probability. Defaults to 0.1.
+            use_depthwise_separable_conv (bool, optional): ASPP enable depthwise convolution. Defaults to False.
+            p (float, optional): GeM parameter. Defaults to 3.
+            eps (float, optional): GeM parameter. Defaults to 1e-6.
+            normalize (bool, optional): GeM parameter. Defaults to True.
+            dense_output_dim (Tuple[int], optional): GeM parameter. Defaults to None.
+        """
+        super(SecondAsppGeM, self).__init__()
+        self.vfe = HardVFE(
+            in_channels=3,
+            feat_channels=vfe_feat_channels,
+            with_voxel_center=True,
+            voxel_size=voxel_size,
+            point_cloud_range=pcd_range
+        )
+        self.middle = SparseMiddleExtractor(
+            in_channels=middle_spconv_in_channels,
+            sparse_shape=grid_zyx,
+            base_channels=middle_base_channels,
+            output_channels=middle_spconv_out_channels,
+            encoder_channels=middle_encoder_channels,
+            encoder_paddings=middle_encoder_paddings,
+            downsample_dimension=middle_downsample_dimension,
+            encoder_downsampling_other_dim=middle_encoder_downsampling_other_dim
+        )
+        # ASPP
+        self.aspp = ASPP(aspp_in_channels,
+                         aspp_out_channels,
+                         aspp_rate,
+                         norm=aspp_norm,
+                         activation=nn.ReLU(),
+                         dropout=aspp_dropout,
+                         use_depthwise_separable_conv=use_depthwise_separable_conv)
+        # NetVLAD
+        self.gem = GeM(p=p, eps=eps, normalize=normalize,
+                            dense_output_dim=dense_output_dim)
+
+    def forward(self, features: torch.tensor, num_points: torch.tensor, coors: torch.tensor, batch_size: torch.tensor) -> torch.tensor:
+        """Forward pass method
+
+        Args:
+            features (torch.tensor): Voxel feature with shape (N, M, 3)
+            num_points (torch.tensor): Number of points per voxel with shape (N, )
+            coors (torch.tensor): Voxel coordinates with shape (N, 4), [batch_idx, z, y, x]
+            batch_size (torch.tensor): Batch size of the processed mini-batch
+            Note that:
+                N is the total number of voxel in this mini-batch.
+                M is the maximum number of points per voxel in the voxelization configuration
+                batch_idx is used as an id to seperate different samples within a mini-batch
+
+        Returns:
+            torch.tensor: Output tensor
+        """
+        vfe_output = self.vfe(
+            features=features, num_points=num_points, coors=coors)
+        middle_output = self.middle(vfe_output, coors, int(batch_size))
+        aspp_output = self.aspp(middle_output)
+        output = self.gem(aspp_output)
         return output

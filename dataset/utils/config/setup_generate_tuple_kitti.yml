@@ -1,5 +1,5 @@
 parameter:
-  name: kitti
+  name: kitti_vxp
   annotation: /storage/user/lyun/kitti/all_annotation.csv
   save_dir: /storage/user/lyun/kitti
   train: [3, 4, 5, 6, 7, 8, 9, 10]

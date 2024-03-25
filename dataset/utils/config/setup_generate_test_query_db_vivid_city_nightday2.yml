@@ -1,6 +1,7 @@
 general:
-  name: vivid_city_nightday2
-  annotation: /storage/group/dataset_mirrors/01_incoming/vividpp/driving_full/annotations_all.csv
+  name: new_vivid_city_nightday2
+  # annotation: /storage/group/dataset_mirrors/01_incoming/vividpp/driving_full/annotations_all.csv
+  annotation: /storage/user/lyun/vivid/all_annotation.csv
   save_dir: /storage/user/lyun/vivid
   sequence:
     - city_night
@@ -8,5 +9,5 @@ general:
 parameter:
   threshold: 25
   yaw: True
-  num_samples: 1500
-  interval: null
+  num_samples: null
+  interval: 20

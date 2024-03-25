@@ -1,18 +1,16 @@
 general:
   ## ====== Modify only this section ======
-  train_pickle_dir: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/full_training_pair_3d_student_p10_n50.pickle"
-  val_pickle_dir: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/full_testing_pair_3d_student_p10_n50.pickle"
-  annotation_dir: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/all_annotation.csv"
-  save_dir: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/"
-  name: vxp_oxford
+  train_pickle_dir: <path/to/{name}_training_pair_3d_student_p10_n25.pickle>
+  val_pickle_dir: <path/to/{name}_testing_pair_3d_student_p10_n25.pickle>
+  annotation_dir: <path/to/oxford/all_annotation.csv>
+  save_dir: <path/to/save_dir/oxford>
+  name: vxp_pcnetwork_oxford
   ## ======================================
 model:
   ## ====== Modify only this section ======
-  teacher_setup: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/setup_teacher2d_backbone2d_dino_vits8_gem_wo_norm_w_dense_2023_07_12_16_32_39.yml"
-  teacher_model: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/teacher2d_backbone2d_dino_vits8_gem_wo_norm_w_dense_2023_07_12_16_32_39_last.pth"
   load_pretrained: True
-  student_pretrained_setup: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/setup_vlfe_2023_09_18_16_58_54.yml"
-  student_pretrained_model: "/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/models/vlfe_2023_09_18_16_58_54.pth"
+  student_pretrained_setup: <path/to/setup_vxp_vpenc_oxford_YYYY_MM_DD_HH_mm_ss.yml>
+  student_pretrained_model: <path/to/vxp_vpenc_oxford_YYYY_MM_DD_HH_mm_ss.pth>
   ## ======================================
   arch: VXIGeM
   parameters:
@@ -27,6 +25,7 @@ model:
     dense_output_dim: !!python/tuple [384, 256]
 
 dataset:
+  rebase_dir: null
   batch_size: 8
   num_workers: 8
   voxelization: True

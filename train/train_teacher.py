@@ -43,6 +43,7 @@ process = psutil.Process()
 
 random.seed(0)
 torch.manual_seed(0)
+np.random.seed(0)
 
 logger = logging.getLogger(__name__)
 # logger.setLevel(logging.INFO)
@@ -409,8 +410,11 @@ if __name__ == "__main__":
                         default="../setup/teacher_setup.yml")
     parser.add_argument('--debug', action='store_true')
     parser.add_argument('--cpu', action='store_true')
-    parser.add_argument('--mode', type=str, default='train', help='Mode',
-                        choices=['train', 'test-training-set', 'test-validation-set'])
+    # parser.add_argument('--train_pickle_dir', type=str, default="/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/vxp_training_queries_baseline_p10_n25_yaw.pickle", help="Path to the training pickle file.")
+    # parser.add_argument('--val_pickle_dir', type=str, default="/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/vxp_test_queries_baseline_p10_n25_yaw.pickle", help="Path to the validation pickle file.")
+    # parser.add_argument('--save_dir', type=str, default="/storage/user/lyun/Oxford_Robocar/dataset_every_5m_45runs/", help="Path to the saving directory, model.pth and setup.yml would be saved into a sub-directory named /models.")
+    # parser.add_argument('--name', type=str, default="dinogem", help="Name of the model")
+    
 
     args = parser.parse_args()
     if args.debug:
@@ -419,7 +423,11 @@ if __name__ == "__main__":
         level = logging.INFO
 
     setup = load_setup_file(args.config)
-
+    # setup['general']['train_pickle_dir'] = args.train_pickle_dir
+    # setup['general']['val_pickle_dir'] = args.val_pickle_dir
+    # setup['general']['save_dir'] = args.save_dir
+    # setup['general']['name'] = args.name
+    
     current_time = datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
     log_dir = os.path.join(setup['general']['save_dir'], 'log')
     model_dir = os.path.join(setup['general']['save_dir'], 'models')\
@@ -432,13 +440,6 @@ if __name__ == "__main__":
     transforms = load_data_augmentation(setup['dataset']['preprocessing'])
     transforms = torchvision.transforms.Compose(transforms)
 
-    # transforms = torchvision.transforms.Compose([
-    #     # torchvision.transforms.PILToTensor(),
-    #     torchvision.transforms.ToTensor(),
-    #     torchvision.transforms.Normalize(
-    #         (0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
-    # ])
-
     if not args.cpu:
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     else:
@@ -446,140 +447,90 @@ if __name__ == "__main__":
 
     logger.info(f"Using {device}")
 
-    if args.mode == 'train':
-        logger.info("Loading the training dataset")
+    logger.info("Loading the training dataset")
 
-        if setup['dataset']['data_augmentation'] is not None:
-            data_augmentation = load_data_augmentation(
-                setup['dataset']['data_augmentation'])
-            data_augmentation_tranforms = torchvision.transforms.Compose(
-                data_augmentation
-            )
-            train_dataset = OxfordImageDataset(query_filepath=setup['general']['train_pickle_dir'],
-                                               transform=transforms,
-                                               max_elems=None, use_undistorted=setup['dataset']['use_undistorted'],
-                                               data_augmentation=data_augmentation_tranforms)
-        else:
-            train_dataset = OxfordImageDataset(query_filepath=setup['general']['train_pickle_dir'],
-                                               transform=transforms,
-                                               max_elems=None, use_undistorted=setup['dataset']['use_undistorted']
-                                               )
+    if setup['dataset']['data_augmentation'] is not None:
+        data_augmentation = load_data_augmentation(
+            setup['dataset']['data_augmentation'])
+        data_augmentation_tranforms = torchvision.transforms.Compose(
+            data_augmentation
+        )
+        train_dataset = OxfordImageDataset(query_filepath=setup['general']['train_pickle_dir'],
+                                            transform=transforms,
+                                            max_elems=None, use_undistorted=setup['dataset']['use_undistorted'],
+                                            data_augmentation=data_augmentation_tranforms)
+    else:
+        train_dataset = OxfordImageDataset(query_filepath=setup['general']['train_pickle_dir'],
+                                            transform=transforms,
+                                            max_elems=None, use_undistorted=setup['dataset']['use_undistorted']
+                                            )
 
-        train_sampler = BatchSampler(train_dataset, batch_size=setup['dataset']['batch_size'],
-                                     batch_size_limit=setup['dataset']['batch_size_limit'],
-                                     batch_expansion_rate=setup['dataset']['batch_expansion_rate'])
+    train_sampler = BatchSampler(train_dataset, batch_size=setup['dataset']['batch_size'],
+                                    batch_size_limit=setup['dataset']['batch_size_limit'],
+                                    batch_expansion_rate=setup['dataset']['batch_expansion_rate'])
 
-        train_dataloader = DataLoader(train_dataset, batch_sampler=train_sampler, collate_fn=make_collate_fn(train_dataset),
-                                      num_workers=setup['dataset']['num_workers'], pin_memory=True)
-
-        logging.info(f"Successfully load {len(train_dataset)} data")
-
-        logging.info("Loading the validation dataset")
-
-        val_dataset = OxfordImageDataset(query_filepath=setup['general']['val_pickle_dir'],
-                                         transform=transforms,
-                                         max_elems=None, use_undistorted=setup['dataset']['use_undistorted'])
-
-        val_sampler = BatchSampler(
-            val_dataset, batch_size=setup['dataset']['batch_size'])
-
-        val_dataloader = DataLoader(val_dataset, batch_sampler=val_sampler, collate_fn=make_collate_fn(val_dataset),
+    train_dataloader = DataLoader(train_dataset, batch_sampler=train_sampler, collate_fn=make_collate_fn(train_dataset),
                                     num_workers=setup['dataset']['num_workers'], pin_memory=True)
 
-        logging.info(f"Successfully load {len(val_dataset)} data")
+    logging.info(f"Successfully load {len(train_dataset)} data")
 
-        teacher = model_factory_v2(model_collection=model,
-                                   model_setup=setup['model'])
-        if setup['model']['pretrained'] is not None:
-            teacher = load_pretrained_weight(
-                teacher, os.path.join('..', 'pretrained', setup['model']['pretrained']), device)
-        teacher = teacher.to(device)
+    logging.info("Loading the validation dataset")
 
-        loss = make_loss(setup['loss']['loss_fn'], setup['loss']['parameters'])
+    val_dataset = OxfordImageDataset(query_filepath=setup['general']['val_pickle_dir'],
+                                        transform=transforms,
+                                        max_elems=None, use_undistorted=setup['dataset']['use_undistorted'])
 
-        opt_class = getattr(torch.optim, setup['optimizer']['fn'])
-        opt = opt_class(params=teacher.parameters(), **
-                        setup['optimizer']['parameters'])
+    val_sampler = BatchSampler(
+        val_dataset, batch_size=setup['dataset']['batch_size'])
 
-        if setup['scheduler']['fn'] is not None:
-            scheduler_class = getattr(
-                torch.optim.lr_scheduler, setup['scheduler']['fn'])
-            if setup['scheduler']['fn'] == 'LambdaLR':
-                gamma = setup['scheduler']['parameters']['gamma']
-                step_size = setup['scheduler']['parameters']['step_size']
+    val_dataloader = DataLoader(val_dataset, batch_sampler=val_sampler, collate_fn=make_collate_fn(val_dataset),
+                                num_workers=setup['dataset']['num_workers'], pin_memory=True)
 
-                def lambda_fn(epoch): return max(gamma ** (epoch // step_size),
-                                                 setup['optimizer']['min_lr'] / setup['optimizer']['parameters']['lr'])
-                scheduler = scheduler_class(opt, lr_lambda=lambda_fn)
-                # setup['scheduler']['parameters'] = {'lr_lambda': lambda_fn}
-            else:
-                scheduler = scheduler_class(
-                    opt, **setup['scheduler']['parameters'])
+    logging.info(f"Successfully load {len(val_dataset)} data")
+
+    teacher = model_factory_v2(model_collection=model,
+                                model_setup=setup['model'])
+    if setup['model']['pretrained'] is not None:
+        teacher = load_pretrained_weight(
+            teacher, os.path.join('..', 'pretrained', setup['model']['pretrained']), device)
+    teacher = teacher.to(device)
+
+    loss = make_loss(setup['loss']['loss_fn'], setup['loss']['parameters'])
+
+    opt_class = getattr(torch.optim, setup['optimizer']['fn'])
+    opt = opt_class(params=teacher.parameters(), **
+                    setup['optimizer']['parameters'])
+
+    if setup['scheduler']['fn'] is not None:
+        scheduler_class = getattr(
+            torch.optim.lr_scheduler, setup['scheduler']['fn'])
+        if setup['scheduler']['fn'] == 'LambdaLR':
+            gamma = setup['scheduler']['parameters']['gamma']
+            step_size = setup['scheduler']['parameters']['step_size']
+
+            def lambda_fn(epoch): return max(gamma ** (epoch // step_size),
+                                                setup['optimizer']['min_lr'] / setup['optimizer']['parameters']['lr'])
+            scheduler = scheduler_class(opt, lr_lambda=lambda_fn)
+            # setup['scheduler']['parameters'] = {'lr_lambda': lambda_fn}
         else:
-            scheduler = None
+            scheduler = scheduler_class(
+                opt, **setup['scheduler']['parameters'])
+    else:
+        scheduler = None
 
-        if setup['general']['name'] is None:
-            name = f'teacher2d_{current_time}'
-        else:
-            name = setup['general']['name'] + f'_{current_time}'
+    if setup['general']['name'] is None:
+        name = f'teacher2d_{current_time}'
+    else:
+        name = setup['general']['name'] + f'_{current_time}'
 
-        setup['general']['name'] = name
-        setup['model']['path'] = os.path.join(model_dir, name + '.pth')
-        save_setup_file(setup=setup, path=os.path.join(
-            model_dir, 'setup_' + name + '.yml'))
-        # with open(os.path.join(model_dir, 'setup_' + name + '.yml'), 'w') as yaml_file:
-        #     yaml.dump(setup, yaml_file, default_flow_style=False)
+    setup['general']['name'] = name
+    setup['model']['path'] = os.path.join(model_dir, name + '.pth')
+    save_setup_file(setup=setup, path=os.path.join(
+        model_dir, 'setup_' + name + '.yml'))
+    # with open(os.path.join(model_dir, 'setup_' + name + '.yml'), 'w') as yaml_file:
+    #     yaml.dump(setup, yaml_file, default_flow_style=False)
 
-        writer = SummaryWriter(os.path.join('..', 'tb_runs', name))
+    writer = SummaryWriter(os.path.join('..', 'tb_runs', name))
 
-        train(teacher, opt, loss, scheduler, setup, train_dataloader, val_dataloader, val_dataset, device, name,
-              writer, setup['optimizer']['recall_interval'], args.debug, setup['dataset']['batch_expansion_th'])
-    elif args.mode == 'test-training-set':
-        logging.info("Loading the training dataset")
-        train_dataset = OxfordImageDataset(query_filepath=setup['general']['train_pickle_dir'],
-                                           transform=transforms,
-                                           max_elems=None)
-        train_dataset.set_dataset_name('TRAINING')
-        logging.info(f"Successfully load {len(train_dataset)} data")
-        train_dataloader = DataLoader(
-            train_dataset, batch_size=setup['dataset']['batch_size'], shuffle=False, num_workers=setup['dataset']['num_workers'])
-        writer = SummaryWriter(os.path.join(
-            '..', 'tb_runs', setup['general']['name']))
-
-        teacher = model_factory_v2(model_collection=model,
-                                   model_setup=setup['model'])
-        # arch = getattr(model, setup['model']['arch'])
-
-        # model = arch(**setup['model']['parameters'])
-        teacher = load_pretrained_weight(model=teacher,
-                                         model_path=setup['model']['path'].replace(
-                                             '.pth', '_v.pth'),
-                                         device=device
-                                         )
-        # model.load_state_dict(torch.load(setup['model']['path'].replace('.pth', '_v.pth')))
-        teacher = teacher.to(device)
-        test(teacher, setup, train_dataloader, train_dataset, device, writer)
-
-    elif args.mode == 'test-validation-set':
-        logging.info("Loading the validation dataset")
-        val_dataset = OxfordImageDataset(query_filepath=setup['general']['val_pickle_dir'],
-                                         transform=transforms,
-                                         max_elems=None)
-        val_dataset.set_dataset_name('VALIDATION')
-        logging.info(f"Successfully load {len(val_dataset)} data")
-        val_dataloader = DataLoader(
-            val_dataset, batch_size=setup['dataset']['batch_size'], shuffle=False, num_workers=setup['dataset']['num_workers'])
-        # arch = getattr(model, setup['model']['arch'])
-        writer = SummaryWriter(os.path.join(
-            '..', 'tb_runs', setup['general']['name']))
-        # model = arch(**setup['model']['parameters'])
-        # model.load_state_dict(torch.load(setup['model']['path'].replace('.pth', '_v.pth')))
-        teacher = model_factory_v2(model_collection=model,
-                                   model_setup=setup['model'])
-        teacher = load_pretrained_weight(model=teacher,
-                                         model_path=setup['model']['path'].replace(
-                                             '.pth', '_v.pth'),
-                                         device=device
-                                         )
-        teacher = teacher.to(device)
-        test(teacher, setup, val_dataloader, val_dataset, device, writer)
+    train(teacher, opt, loss, scheduler, setup, train_dataloader, val_dataloader, val_dataset, device, name,
+            writer, setup['optimizer']['recall_interval'], args.debug, setup['dataset']['batch_expansion_th'])

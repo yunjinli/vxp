@@ -1,12 +1,10 @@
 general:
   name: vivid_city_nightday2
-  ## vxp
-  teacher_setup: /storage/user/lyun/vivid/models/setup_teacher_vivid_2023_11_20_21_35_31.yml
-  teacher_model: /storage/user/lyun/vivid/models/teacher_vivid_2023_11_20_21_35_31_v.pth
-  student_setup: /storage/user/lyun/vivid/models/setup_vxp_vivid_jim_coors_2023_11_22_11_34_37.yml
-  student_model: /storage/user/lyun/vivid/models/vxp_vivid_jim_coors_2023_11_22_11_34_37.pth
-  query: /storage/user/lyun/vivid/vivid_city_nightday2_evaluation_query_th25m_yaw_2runs_everyNonem.pickle
-  db: /storage/user/lyun/vivid/vivid_city_nightday2_evaluation_database_th25m_yaw_2runs_everyNonem.pickle
+  student_setup: /usr/stud/lyun/vxp/assets/paper_weights/vivid/setup_vxp_pcnetwork_vivid_2023_11_22_11_34_37.yml
+  student_model: /usr/stud/lyun/vxp/assets/paper_weights/vivid/vxp_vxp_pcnetwork_vivid_2023_11_22_11_34_37.pth
+
+  query: /storage/user/lyun/vivid/new_vivid_city_nightday2_evaluation_query_th25m_yaw_2runs_everyNonem.pickle
+  db: /storage/user/lyun/vivid/new_vivid_city_nightday2_evaluation_database_th25m_yaw_2runs_everyNonem.pickle
   k: 25
   disp_img_tb: False
   cross_normalize: False
