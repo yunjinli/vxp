@@ -1,4 +1,4 @@
-# VXP: Voxel-Cross-Pixel Large-scale Image-LiDAR Place Recognition
+# VXP: Voxel-Cross-Pixel Large-scale Image-LiDAR Place Recognition (3DV 2025)
 
 ## [Project page](https://yunjinli.github.io/projects-vxp/) | [Paper](https://arxiv.org/abs/2403.14594)
 
