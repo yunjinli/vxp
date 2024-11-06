@@ -37,7 +37,7 @@ import pickle as pkl
 from torch.utils.tensorboard import SummaryWriter
 from sklearn.neighbors import KDTree
 from sklearn.preprocessing import normalize
-
+import math
 logger = logging.getLogger(__name__)
 # logger.setLevel(logging.INFO)
 # create console handler and set level to debug
@@ -141,20 +141,13 @@ def inference_single_q_db_all_kdtree(enc_2d, enc_3d, q, db, q_data, db_data, dev
     pair_recall_2d2d, pair_similarity_2d2d, pair_opr_2d2d = get_recall(
         db_img_feat, q_img_feat, gt, writer, mode='2D-2D', disp_img_tb=setup['general']['disp_img_tb'], q_data=q_data, db_data=db_data, num_neighbors=num_neighbors)
 
-    if not cross_normalize:
-        pair_recall_3d3d, pair_similarity_3d3d, pair_opr_3d3d = get_recall(
-            db_submap_feat, q_submap_feat, gt, writer, mode='3D-3D', disp_img_tb=setup['general']['disp_img_tb'], q_data=q_data, db_data=db_data, num_neighbors=num_neighbors)
-        pair_recall_2d3d, pair_similarity_2d3d, pair_opr_2d3d = get_recall(
-            db_submap_feat, q_img_feat, gt, writer, mode='2D-3D', disp_img_tb=setup['general']['disp_img_tb'], q_data=q_data, db_data=db_data, num_neighbors=num_neighbors)
-        pair_recall_3d2d, pair_similarity_3d2d, pair_opr_3d2d = get_recall(
-            db_img_feat, q_submap_feat, gt, writer, mode='3D-2D', disp_img_tb=setup['general']['disp_img_tb'], q_data=q_data, db_data=db_data, num_neighbors=num_neighbors)
-    else:
-        pair_recall_3d3d, pair_similarity_3d3d, pair_opr_3d3d = get_recall(
-            normalize(db_submap_feat), normalize(q_submap_feat), gt, writer, mode='3D-3D', disp_img_tb=setup['general']['disp_img_tb'], q_data=q_data, db_data=db_data, num_neighbors=num_neighbors)
-        pair_recall_2d3d, pair_similarity_2d3d, pair_opr_2d3d = get_recall(
-            normalize(db_submap_feat), normalize(q_img_feat), gt, writer, mode='2D-3D', disp_img_tb=setup['general']['disp_img_tb'], q_data=q_data, db_data=db_data, num_neighbors=num_neighbors)
-        pair_recall_3d2d, pair_similarity_3d2d, pair_opr_3d2d = get_recall(
-            normalize(db_img_feat), normalize(q_submap_feat), gt, writer, mode='3D-2D', disp_img_tb=setup['general']['disp_img_tb'], q_data=q_data, db_data=db_data, num_neighbors=num_neighbors)
+    # if not cross_normalize:
+    pair_recall_3d3d, pair_similarity_3d3d, pair_opr_3d3d = get_recall(
+        db_submap_feat, q_submap_feat, gt, writer, mode='3D-3D', disp_img_tb=setup['general']['disp_img_tb'], q_data=q_data, db_data=db_data, num_neighbors=num_neighbors)
+    pair_recall_2d3d, pair_similarity_2d3d, pair_opr_2d3d = get_recall(
+        db_submap_feat, q_img_feat, gt, writer, mode='2D-3D', disp_img_tb=setup['general']['disp_img_tb'], q_data=q_data, db_data=db_data, num_neighbors=num_neighbors)
+    pair_recall_3d2d, pair_similarity_3d2d, pair_opr_3d2d = get_recall(
+        db_img_feat, q_submap_feat, gt, writer, mode='3D-2D', disp_img_tb=setup['general']['disp_img_tb'], q_data=q_data, db_data=db_data, num_neighbors=num_neighbors)
 
     return pair_recall_2d2d, pair_similarity_2d2d, pair_opr_2d2d, pair_recall_3d3d, pair_similarity_3d3d, pair_opr_3d3d, pair_recall_2d3d, pair_similarity_2d3d, pair_opr_2d3d, pair_recall_3d2d, pair_similarity_3d2d, pair_opr_3d2d
 
@@ -179,27 +172,36 @@ def get_recall(database_output, queries_output, gt, writer=None, mode='2D-2D', d
         true_neighbors = gt[i]
         logger.debug(f"GT for frame {i}: {true_neighbors}")
         if (len(true_neighbors) == 0):
-            logger.warning("No re-visit for this query")
+            # logger.warning("No re-visit for this query")
             continue
         num_evaluated += 1
         distances, indices = database_nbrs.query(
-            np.array([queries_output[i]]), k=num_neighbors + 100)
+            np.array([queries_output[i]]), k=2 * num_neighbors + 1)
+            # np.array([queries_output[i]]), k=num_neighbors)
+        
         filtered_indices = []
         for id in range(len(indices[0])):
-            # if abs(indices[0][id] - i) != 0:
-            #     filtered_indices.append(indices[0][id])
-            # if len(filtered_indices) == num_neighbors:
-            #     break 
-            # if abs(indices[0][id] - i) > 100 and i > indices[0][id]:
-            # if abs(indices[0][id] - i) > 100:
-            if abs(indices[0][id] - i) != 0:
+            # x1, y1 = q_data.getUTM(i) 
+            # x2, y2 = db_data.getUTM(indices[0][id]) 
+            # if x1 - x2 == 0 and y1 - y2 == 0:
+            #     logger.warning(f"Same place from {i} -> delete {indices[0][id]}")
+            # else:
+            # if q_data.getT(i) > db_data.getT(indices[0][id]):
+            if q_data.getT(i) > db_data.getT(indices[0][id]) and math.fabs(q_data.getT(i) - db_data.getT(indices[0][id])) > 10:
+            # if math.fabs(q_data.getT(i) - db_data.getT(indices[0][id])) > 10:
                 filtered_indices.append(indices[0][id])
+            else:
+                pass
+                # logger.warning(f"First visit from {i} -> delete {indices[0][id]}")
             if len(filtered_indices) == num_neighbors:
                 break 
-        # indices[0] = filtered_indices
+
         # for j in range(len(indices[0])):
         for j in range(len(filtered_indices)):
             # if indices[0][j] in true_neighbors:
+            if mode in ['2D-3D', '3D-2D']:
+                if j == 0:
+                    logger.info(f"query {i}, Top1-prediction: {filtered_indices[j]}")
             if filtered_indices[j] in true_neighbors:
                 if (j == 0):
                     similarity = np.dot(
@@ -207,9 +209,18 @@ def get_recall(database_output, queries_output, gt, writer=None, mode='2D-2D', d
                         queries_output[i], database_output[filtered_indices[j]])
                     top1_similarity_score.append(similarity)
                 recall[j] += 1
+                if mode == '2D-3D':
+                    if j == 0:
+                        logger.info(f"Success AR@1 at query {i}, img: {q_data.q[0][i]['img_path']}")
+                        logger.info(f"Retrieve {filtered_indices[j]}, submap: {db_data.db[0][filtered_indices[j]]['submap_path']}")
+                elif mode == '3D-2D':
+                    if j == 0:
+                        logger.info(f"Success AR@1 at query {i}, submap: {q_data.q[0][i]['submap_path']}")
+                        logger.info(f"Retrieve {filtered_indices[j]}, img: {db_data.db[0][filtered_indices[j]]['img_path']}")
                 break
 
         if len(list(set(filtered_indices[0:threshold]).intersection(set(true_neighbors)))) > 0:
+        # if len(list(set(indices[0][0:threshold]).intersection(set(true_neighbors)))) > 0:
             one_percent_retrieved += 1
 
     one_percent_recall = one_percent_retrieved / float(num_evaluated)

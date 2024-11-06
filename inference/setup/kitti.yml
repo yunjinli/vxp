@@ -1,15 +1,34 @@
+# general:
+#   name: kitti_02
+#   # student_setup: /home/yunjinli/git_repo/vxp/assets/paper_weights/kitti/setup_vxp_pcnetwork_kitti_2024_01_09_16_57_28.yml
+#   # student_model: /home/yunjinli/git_repo/vxp/assets/paper_weights/kitti/vxp_pcnetwork_kitti_2024_01_09_16_57_28.pth
+#   student_setup: /mnt/sda/kitti/models/setup_cattaneo_student_kitti_newval_2024_01_12_00_00_02.yml
+#   student_model: /mnt/sda/kitti/models/cattaneo_student_kitti_newval_2024_01_12_00_00_02_last.pth
+#   query: /mnt/sda/kitti/kitti_02_evaluation_query_th20m_yaw_1runs.pickle
+#   db: /mnt/sda/kitti/kitti_02_evaluation_database_th20m_yaw_1runs.pickle
+#   k: 25
+#   disp_img_tb: False
+#   cross_normalize: False
+#   save_dir: /mnt/sda/kitti
+#   num_workers: 8
+#   batch_size: 8
+#   rebase_dir: null
+#   sequence:
+#     - 2
 general:
   name: kitti_00
-  student_setup: /usr/stud/lyun/vxp/assets/paper_weights/kitti/setup_vxp_pcnetwork_kitti_2024_01_09_16_57_28.yml
-  student_model: /usr/stud/lyun/vxp/assets/paper_weights/kitti/vxp_pcnetwork_kitti_2024_01_09_16_57_28.pth
-  query: /storage/user/lyun/kitti/kitti_00_test_region_evaluation_query_th20m_yaw_1runs.pickle
-  db: /storage/user/lyun/kitti/kitti_00_test_region_evaluation_database_th20m_yaw_1runs.pickle
-  k: 100
+  student_setup: /home/yunjinli/git_repo/vxp/assets/paper_weights/kitti/setup_vxp_pcnetwork_kitti_2024_01_09_16_57_28.yml
+  student_model: /home/yunjinli/git_repo/vxp/assets/paper_weights/kitti/vxp_pcnetwork_kitti_2024_01_09_16_57_28.pth
+  # student_setup: /mnt/sda/kitti/models/setup_cattaneo_student_kitti_newval_2024_01_12_00_00_02.yml
+  # student_model: /mnt/sda/kitti/models/cattaneo_student_kitti_newval_2024_01_12_00_00_02_last.pth
+  query: /mnt/sda/kitti/kitti_00_evaluation_query_th20m_yaw_1runs.pickle
+  db: /mnt/sda/kitti/kitti_00_evaluation_database_th20m_yaw_1runs.pickle
+  k: 25
   disp_img_tb: False
   cross_normalize: False
-  save_dir: /storage/user/lyun/kitti
-  num_workers: 4
-  batch_size: 16
+  save_dir: /mnt/sda/kitti
+  num_workers: 16
+  batch_size: 8
   rebase_dir: null
   sequence:
     - 0
