@@ -72,14 +72,24 @@ def construct_query_and_database_sets(query_base_dir, db_base_dir, folders, p, x
 	test_sets = []
 	database_sets = []
 
+	annotation = pd.read_csv(os.path.join(query_base_dir, 'all_annotation.csv'))
+	
 	for folder in folders:
 		df_database = pd.DataFrame({})
 		df_test = pd.DataFrame({})
 		database = {}
 		test = {} 
-		df_q = pd.read_csv(os.path.join(query_base_dir, 'submap', folder, f"annotation_{folder}.csv"))
-		df_db = pd.read_csv(os.path.join(db_base_dir, 'submap', folder, f"annotation_{folder}.csv"))
+		df_q = pd.DataFrame({})
+		df_db = pd.DataFrame({})
+		# df_q = pd.read_csv(os.path.join(query_base_dir, 'submap', folder, f"annotation_{folder}.csv"))
+		# df_db = pd.read_csv(os.path.join(db_base_dir, 'submap', folder, f"annotation_{folder}.csv"))
 
+		for index, row in annotation.iterrows():
+			if row['date'] == folder:
+				new_row = pd.DataFrame([{'timestamp': row['timestamp'], 'date': row['date'], 'northing': row['northing'],
+										'easting': row['easting'], 'yaw': row['yaw'], 'submap_path': row['submap_path'], 'img_path': row['img_path']}])
+				df_q = pd.concat([df_q, new_row], ignore_index=True)
+				df_db = pd.concat([df_db, new_row], ignore_index=True)
 		for index, row in df_q.iterrows():
 			if(check_in_test_set(row['northing'], row['easting'], p, x_width, y_width)):
 				new_row = pd.DataFrame([{'timestamp': row['timestamp'], 'date': row['date'], 'northing': row['northing'], 'easting': row['easting'], 'yaw': row['yaw'], 'submap_path': row['submap_path'], 'img_path': row['img_path']}])
