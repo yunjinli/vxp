@@ -42,3 +42,14 @@ Please see [here](./docs/training.md).
 ## Inference
 
 Please see [here](./docs/inference.md).
+
+## BibTex
+
+```
+@article{li2024vxp,
+    title={VXP: Voxel-Cross-Pixel Large-scale Image-LiDAR Place Recognition},
+    author={Li, Yun-Jin and Gladkova, Mariia and Xia, Yan and Wang, Rui and Cremers, Daniel},
+    journal={arXiv preprint arXiv:2403.14594},
+    year={2024}
+}
+```
