@@ -1,7 +1,10 @@
 # VXP: Voxel-Cross-Pixel Large-scale Image-LiDAR Place Recognition (3DV 2025)
 
 ## [Project page](https://yunjinli.github.io/projects-vxp/) | [Paper](https://arxiv.org/abs/2403.14594)
-
+## News
+- 2024/12/20: We are actively working on the improved version of VXP, stay tuned...
+- 
+## Introduction
 We propose a novel Voxel-Cross-Pixel (VXP) approach, which establishes voxel and pixel correspondences in a self-supervised manner and brings them into a shared feature space. We achieve state-of-the-art performance in cross-modal retrieval on the Oxford RobotCar, ViViD++ datasets and KITTI benchmark, while maintaining high uni-modal global localization accuracy.
 
 |                                               |                                               |
